@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Debug Auth</title>
+  <style>
+    body { font-family: monospace; padding: 2rem; background: #0A0D12; color: #E5E7EB; }
+    button { padding: 0.5rem 1rem; margin: 0.5rem; cursor: pointer; }
+    pre { background: #161D2B; padding: 1rem; border-radius: 8px; overflow-x: auto; }
+    .success { color: #6EE7B7; }
+    .error { color: #F87171; }
+  </style>
+</head>
+<body>
+  <h1>🔍 Auth Debug Panel</h1>
+
+  <div>
+    <h3>LocalStorage:</h3>
+    <pre id="storage"></pre>
+  </div>
+
+  <div>
+    <button onclick="testLogin()">Test Login</button>
+    <button onclick="testDashboard()">Test Dashboard API</button>
+    <button onclick="testKeys()">Test Keys API</button>
+    <button onclick="clearStorage()">Clear Storage</button>
+  </div>
+
+  <div>
+    <h3>Results:</h3>
+    <pre id="results"></pre>
+  </div>
+
+  <script>
+    function updateStorage() {
+      const storage = {
+        token: localStorage.getItem('token'),
+        appName: localStorage.getItem('appName')
+      };
+      document.getElementById('storage').textContent = JSON.stringify(storage, null, 2);
+    }
+
+    function log(msg, isError = false) {
+      const el = document.getElementById('results');
+      const cls = isError ? 'error' : 'success';
+      el.innerHTML += `<span class="${cls}">${msg}</span>\n`;
+    }
+
+    async function testLogin() {
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ appName: 'TIQS', password: 'xzy356055' })
+        });
+        const data = await res.json();
+        log(`✅ Login: ${res.status}`);
+        log(JSON.stringify(data, null, 2));
+
+        if (data.token) {
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('appName', data.appName);
+          updateStorage();
+        }
+      } catch (err) {
+        log(`❌ Login error: ${err.message}`, true);
+      }
+    }
+
+    async function testDashboard() {
+      try {
+        const token = localStorage.getItem('token');
+        const res = await fetch('/api/dashboard/stats', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        log(`✅ Dashboard: ${res.status}`);
+        log(JSON.stringify(data, null, 2));
+      } catch (err) {
+        log(`❌ Dashboard error: ${err.message}`, true);
+      }
+    }
+
+    async function testKeys() {
+      try {
+        const token = localStorage.getItem('token');
+        const res = await fetch('/api/keys', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        log(`✅ Keys: ${res.status}`);
+        log(JSON.stringify(data, null, 2));
+      } catch (err) {
+        log(`❌ Keys error: ${err.message}`, true);
+      }
+    }
+
+    function clearStorage() {
+      localStorage.clear();
+      updateStorage();
+      document.getElementById('results').textContent = 'Storage cleared\n';
+    }
+
+    updateStorage();
+  </script>
+</body>
+</html>
