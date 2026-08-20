@@ -1,0 +1,35 @@
+plugins {
+    id 'java'
+    id 'eclipse'
+    id 'idea'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+group = 'com.yumegod.adminpanel'
+version = '1.2'
+
+sourceCompatibility = targetCompatibility = '1.8'
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+if (!hasProperty('mainClass')) {
+    ext.mainClass = 'com.yumegod.adminpanel.Main'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.formdev:flatlaf:2.1'
+}
+
+shadowJar {
+    archiveClassifier.set('')
+}
+
+assemble.dependsOn(shadowJar)
+
+jar {
+    manifest.attributes("Main-Class": getProperty('mainClass'))
+}

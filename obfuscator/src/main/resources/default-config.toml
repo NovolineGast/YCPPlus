@@ -1,0 +1,68 @@
+input_jar = "./test.jar"
+libraries = []
+output_jar = "./test-out.jar"
+
+[native]
+app_name = "MyApplication"
+include = ["** #public static void main(java.lang.String[])"]
+auth = true
+call_encryption = false
+exclude = []
+platform = "HOTSPOT"
+
+[generic]
+include = ["**"]
+exclude = []
+
+[rename]
+include = ["**"]
+aggressive_overload = true
+force_change_relative_resource = false
+resource_adapt_method = "EXCLUDE"
+enable = false
+prefix = ""
+exclude = [
+    "^** #public static void main(java.lang.String[])",
+    "** #private ** readObject(java.io.ObjectInputStream) #private ** writeObject(java.io.ObjectOutputStream) # static final long serialVersionUID",
+    "** #** readResolve() #** writeReplace()#** readObjectNoData() throws java.io.ObjectStreamException",
+    "** #java.io.ObjectStreamField[] serialPersistentFields",
+    "** extend java.lang.Enum #public ** * #public ** values() #public ** valueOf(java.lang.String)",
+    "** implement java.lang.annotation.Annotation #public value()",
+    "** #static createUI(javax.swing.JComponent)",
+    "^** #native ** *(**)",
+    "** #** $deserializeLambda$(java.lang.invoke.SerializedLambda) #** lambda$*(**)"
+]
+suffix = ""
+
+[rename.dictionary]
+package = "%mixed_case"
+member = "%mixed_case"
+class = "%mixed_case"
+
+[string_obfuscation]
+include = ["**"]
+enable = true
+exclude = []
+
+[flow_obfuscation]
+mode = "AGGRESSIVE"
+include = ["**"]
+enable = true
+exclude = []
+
+[number_obfuscation]
+mode = "AGGRESSIVE"
+include = ["**"]
+enable = true
+exclude = []
+
+[invoke_dynamic]
+include = ["** #void main(java.lang.String[])"]
+
+[shrink]
+enable = true
+
+[misc]
+transform_class_to_directory = false
+safe_mode = false
+

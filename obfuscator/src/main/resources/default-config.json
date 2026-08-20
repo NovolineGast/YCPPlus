@@ -1,0 +1,95 @@
+{
+  "input_jar": "./test.jar",
+  "output_jar": "./test-out.jar",
+  "libraries": [
+    
+  ],
+  "generic": {
+    "include": [
+      "**"
+    ],
+    "exclude": [
+      
+    ]
+  },
+  "native": {
+    "auth": true,
+    "app_name": "MyApplication",
+    "platform": "HOTSPOT",
+    "call_encryption": false,
+    "include": [
+      "** #public static void main(java.lang.String[])"
+    ],
+    "exclude": [
+      
+    ]
+  },
+  "rename": {
+    "enable": false,
+    "prefix": "",
+    "suffix": "",
+    "dictionary": {
+      "package": "%mixed_case",
+      "class": "%mixed_case",
+      "member": "%mixed_case"
+    },
+    "aggressive_overload": true,
+    "resource_adapt_method": "EXCLUDE",
+    "force_change_relative_resource": false,
+    "include": [
+      "**"
+    ],
+    "exclude": [
+      "^** #public static void main(java.lang.String[])",
+      "** #private ** readObject(java.io.ObjectInputStream) #private ** writeObject(java.io.ObjectOutputStream) # static final long serialVersionUID",
+      "** #** readResolve() #** writeReplace()#** readObjectNoData() throws java.io.ObjectStreamException",
+      "** #java.io.ObjectStreamField[] serialPersistentFields",
+      "** extend java.lang.Enum #public ** * #public ** values() #public ** valueOf(java.lang.String)",
+      "** implement java.lang.annotation.Annotation #public value()",
+      "** #static createUI(javax.swing.JComponent)",
+      "^** #native ** *(**)",
+      "** #** $deserializeLambda$(java.lang.invoke.SerializedLambda) #** lambda$*(**)"
+    ]
+  },
+  "string_obfuscation": {
+    "enable": true,
+    "include": [
+      "**"
+    ],
+    "exclude": [
+      
+    ]
+  },
+  "flow_obfuscation": {
+    "enable": true,
+    "mode": "AGGRESSIVE",
+    "include": [
+      "**"
+    ],
+    "exclude": [
+      
+    ]
+  },
+  "number_obfuscation": {
+    "enable": true,
+    "mode": "AGGRESSIVE",
+    "include": [
+      "**"
+    ],
+    "exclude": [
+      
+    ]
+  },
+  "invoke_dynamic": {
+    "include": [
+      "** #void main(java.lang.String[])"
+    ]
+  },
+  "shrink": {
+    "enable": true
+  },
+  "misc": {
+    "transform_class_to_directory": false,
+    "safe_mode": false
+  }
+}

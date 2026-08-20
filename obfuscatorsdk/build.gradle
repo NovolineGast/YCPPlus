@@ -1,0 +1,22 @@
+plugins {
+    id 'java'
+    id 'eclipse'
+    id 'idea'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+group = 'com.yumegod.obfuscator.sdk'
+version = '1.0'
+
+sourceCompatibility = targetCompatibility = '1.8'
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(":annotations")
+
+    shadow project(":annotations")
+}

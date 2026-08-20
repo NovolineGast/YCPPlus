@@ -1,0 +1,129 @@
+input_jar: ./input.jar
+output_jar: ./output.jar
+
+# the application name which auth system will use
+app_name: MyApplication
+
+# Your libraries folder or jar/jmod/zip file paths
+libraries: []
+
+#generic:
+#  include:
+#    - "**"
+#
+#  exclude: []
+
+native:
+  auth: true
+
+  # HOTSPOT or STD_JAVA
+  platform: HOTSPOT
+  # target: ["win_x86_64"]
+
+  call_encryption:
+    include:
+      - "^**"
+    exclude: []
+
+  include:
+    - "** #public static void main(java.lang.String[])"
+  exclude: []
+
+rename:
+  enable: false
+  # available builtin dictionaries:
+  #   - mixed_case
+  #   - il
+  #   - o0
+  #   - default (or simple)
+  # you can also use your own dictionary by providing a path to a file
+  dictionary:
+    # package: "%mixed_case"
+    class: "%mixed_case"
+    member: "%mixed_case"
+    package: "%mixed_case"
+
+    prefix: ""
+    suffix: ""
+
+  handle_inner_classes: true
+
+  # for members
+  aggressive_overload: true
+
+  # For classes
+  relocate:
+    enable: true
+    package: "YumeCloudProtection"
+    exclude: []
+
+  # The method we should use to adapt resource.
+  #   - aggressive -> also apply mapping into resource (plaintext only)
+  #   - exclude -> exclude all classes and methods appeared in resources (plaintext only)
+  #   - none -> will not do any work
+  resource_adapt_method: EXCLUDE
+  # Force change relative resource path to absolute path
+  force_change_relative_resource: false
+
+  # we will exclude all the members which name was appeared in constant string pool.
+  reflection_capability: true
+
+  include:
+    # only classpath will be accepted here
+    - "**"
+  exclude:
+    - "^** #public static void main(java.lang.String[])"
+    - "** #private ** readObject(java.io.ObjectInputStream) #private ** writeObject(java.io.ObjectOutputStream) # static final long serialVersionUID"
+    - "** #** readResolve() #** writeReplace()#** readObjectNoData() throws java.io.ObjectStreamException"
+    - "** #java.io.ObjectStreamField[] serialPersistentFields"
+    - "** extend java.lang.Enum #public ** * #public ** values() #public ** valueOf(java.lang.String)"
+    - "** implement java.lang.annotation.Annotation #public value()"
+    - "** #static createUI(javax.swing.JComponent)"
+    - "^** #native ** *(**)"
+    - "** #** $deserializeLambda$(java.lang.invoke.SerializedLambda) #** lambda$*(**)"
+    - "@org.spongepowered.asm.** ^** # ** *(**) # ** *"
+
+string_obfuscation:
+  # class only
+  include:
+    - "^**"
+  exclude:
+    - "@org.spongepowered.asm.** ^**"
+
+param_changer:
+  include:
+    - "^**"
+  exclude:
+    - "@org.spongepowered.asm.** ^**"
+    - "^** #public static void main(java.lang.String[])"
+
+flow_obfuscation:
+  # STANDARD, NORMAL or AGGRESSIVE
+  mode: AGGRESSIVE
+  # class only
+  include:
+    - "^**"
+  exclude:
+    - "@org.spongepowered.asm.** ^**"
+
+number_obfuscation:
+  # SIMPLE, NORMAL or AGGRESSIVE
+  mode: AGGRESSIVE
+  # class only
+  include:
+    - "^**"
+  exclude:
+    - "@org.spongepowered.asm.** ^**"
+
+# we recommend to use @InvokeDynamic
+invoke_dynamic:
+  include:
+    - "** #public static void main(java.lang.String[])"
+
+shrink:
+  enable: true
+
+misc:
+  transform_class_to_directory: false
+  hide_members: false
+  safe_mode: false

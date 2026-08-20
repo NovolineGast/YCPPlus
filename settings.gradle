@@ -1,0 +1,9 @@
+include 'obfuscator'
+include 'annotations'
+include 'adminpanel'
+include 'obfuscatorgui'
+include 'authorizationserver'
+include 'obfuscatorsdk'
+include 'obfuscatornewui'
+include 'ByteCodeVirtualizer'
+
