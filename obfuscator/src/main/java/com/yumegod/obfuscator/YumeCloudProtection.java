@@ -19,7 +19,6 @@ import com.yumegod.obfuscator.utils.cfg.ConfigManager;
 import com.yumegod.obfuscator.utils.cfg.annotations.ConfigSection;
 import com.yumegod.obfuscator.utils.cfg.annotations.StaticConfigReceiver;
 import com.yumegod.obfuscator.utils.filter.marker.Marker;
-import com.yumegod.obfuscator.utils.protection.QQUtils;
 import org.apache.commons.io.FileUtils;
 import org.objectweb.asm.*;
 import org.objectweb.asm.commons.ClassRemapper;
@@ -56,8 +55,9 @@ public class YumeCloudProtection {
     public static String applicationName;
     @ConfigSection("native.auth")
     public static boolean auth = true;
-//    @ConfigSection("auth_url")
-    public static String authorizationURL = "http://protection.yumegod.com:13337/";
+    // 自建授权服务器地址（server_go / server_python 均提供 /login 端点）
+    @ConfigSection("native.auth_url")
+    public static String authorizationURL = "http://127.0.0.1:13337/";
     @ConfigSection("misc.safe_mode")
     public static boolean safeMode = false;
 
@@ -162,12 +162,6 @@ public class YumeCloudProtection {
     @SuppressWarnings("BusyWait")
     private static Thread getWaitingThread() {
         Thread thread = new Thread(() -> {
-            try {
-                if (QQUtils.isStupidUser()) {
-                    Runtime.getRuntime().halt(0);
-                    return;
-                }
-            } catch (Exception ignored) {}
             char[] chars = {'|', '/', '-', '\\'};
             try {
                 int i = 0;
@@ -387,16 +381,16 @@ public class YumeCloudProtection {
                 Util.copyResource("sources/native_jvm.hpp", cppDir);
                 Util.copyResource("sources/native_jvm_output.hpp", cppDir);
 
-                Util.copyResource("sources/Authorization.h", cppDir);
-                Util.copyResource("sources/Authorization.lib", cppDir);
-                Util.copyResource("sources/Authorization.dll", cppDir);
-
+                // VMProtect SDK 桩（开源版 no-op 实现；持有商业授权时可用官方头文件覆盖）
                 Util.copyResource("sources/VMProtectSDK.h", cppDir);
-                Util.copyResource("sources/VMProtectSDK64.lib", cppDir);
-                Util.copyResource("sources/VMProtectSDK64.dll", cppDir);
-                Util.copyResource("sources/vmp.exe", cppDir);
-                Util.copyResource("sources/YumeCloud_NativeLibrary.vmp", cppDir);
-                Util.copyResource("sources/YumeCloud_NativeLibrary_NoAuth.vmp", cppDir);
+
+                // VMProtect 为可选商业组件：仅在 resources 中存在时复制，
+                // 缺省（开源分发）自动降级为未加壳构建
+                Util.copyResourceIfExists("sources/VMProtectSDK64.lib", cppDir);
+                Util.copyResourceIfExists("sources/VMProtectSDK64.dll", cppDir);
+                Util.copyResourceIfExists("sources/vmp.exe", cppDir);
+                Util.copyResourceIfExists("sources/YumeCloud_NativeLibrary.vmp", cppDir);
+                Util.copyResourceIfExists("sources/YumeCloud_NativeLibrary_NoAuth.vmp", cppDir);
                 for (ClassNode hiddenClass : hiddenMethodsPool.getClasses()) {
                     String hiddenClassFileName = "data_" + Util.escapeCppNameString(hiddenClass.name.replace('/', '_'));
 

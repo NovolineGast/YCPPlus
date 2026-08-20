@@ -33,11 +33,8 @@ $register_code
     }
 }
 
-$dllBytes
-
 extern "C" JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
 $watermark
-$auth_library
 $authorization
     JNIEnv *env = nullptr;
     vm->GetEnv((void **)&env, JNI_VERSION_1_8);

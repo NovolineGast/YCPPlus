@@ -1,42 +1,353 @@
 #include "native_jvm.hpp"
 #include <algorithm>
-#include <windows.h>
 #include <stdio.h>
 #include <stddef.h>
+#include <string>
+#include <vector>
+#include <cstdlib>
+#include <cctype>
+
+#ifdef _WIN32
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <windows.h>
 #include "VMProtectSDK.h"
+#else
+// POSIX 构建仅用于开发与测试授权客户端（正式产物始终面向 Windows）
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <unistd.h>
+#endif
 
 namespace native_jvm::utils {
-    typedef const char* (*authorization)(const char*, const char*);
-    authorization auth = NULL;
 
-    void init_auth(const unsigned char* dllBytes, size_t dllSize) {
-        char pp[MAX_PATH] = {0}, f[MAX_PATH] = {0}, df[MAX_PATH] = {0};
+    // ===== 开放授权客户端（替代闭源 Authorization.dll）=====
+    // 协议与自建授权服务器对齐：POST <serverURL> 表单 app=<应用名>&key=<密钥>，响应体 "success" 即通过
+    // 密钥来源优先级：环境变量 YCP_LICENSE_KEY → 工作目录 license.key 文件 → 交互式输入（Windows 为密钥对话框）
 
-        if (!GetTempPathA(MAX_PATH, pp) || !pp[0]) { printf(VMProtectDecryptStringA("Temp path error")); return; }
-        if (!GetTempFileNameA(pp, "DLL", 0, f))     { printf(VMProtectDecryptStringA("Temp file error")); return; }
+#ifdef _WIN32
+#define YCP_STR(s) VMProtectDecryptStringA(s)
+#define YCP_PROTECT_BEGIN() VMProtectBeginUltra("authorization")
+#define YCP_PROTECT_END() VMProtectEnd()
+#else
+#define YCP_STR(s) (s)
+#define YCP_PROTECT_BEGIN() ((void) 0)
+#define YCP_PROTECT_END() ((void) 0)
+#endif
 
-        #if defined(_MSC_VER)
-            _snprintf_s(df, MAX_PATH, _TRUNCATE, "%s.dll", f);
-        #else
-            snprintf(df, MAX_PATH, "%s.dll", f);
-        #endif
+    struct ParsedURL {
+        std::string host;
+        int port = 80;
+        std::string path = "/";
+        bool valid = false;
+    };
 
-        if (!MoveFileA(f, df) && !MoveFileExA(f, df, MOVEFILE_REPLACE_EXISTING)) {
-            printf(VMProtectDecryptStringA("Rename to .dll failed")); DeleteFileA(f); return;
+    // 解析 http://host[:port]/path 形式的授权地址
+    static ParsedURL parse_url(const std::string &url) {
+        ParsedURL out;
+        std::string rest;
+        if (url.rfind("http://", 0) == 0) rest = url.substr(7);
+        else if (url.rfind("https://", 0) == 0) return out; // 与原实现一致：仅明文 HTTP
+        else rest = url;
+
+        size_t slash = rest.find('/');
+        if (slash == std::string::npos) out.host = rest;
+        else {
+            out.host = rest.substr(0, slash);
+            out.path = rest.substr(slash);
+        }
+        size_t colon = out.host.rfind(':');
+        if (colon != std::string::npos) {
+            out.port = atoi(out.host.substr(colon + 1).c_str());
+            out.host = out.host.substr(0, colon);
+        }
+        out.valid = !out.host.empty() && out.port > 0 && out.port < 65536;
+        return out;
+    }
+
+    static std::string url_encode(const std::string &value) {
+        static const char *hex = "0123456789ABCDEF";
+        std::string result;
+        result.reserve(value.size() * 3);
+        for (unsigned char c : value) {
+            if (std::isalnum(c) || c == '-' || c == '_' || c == '.' || c == '~') {
+                result += (char) c;
+            } else {
+                result += '%';
+                result += hex[c >> 4];
+                result += hex[c & 0xF];
+            }
+        }
+        return result;
+    }
+
+    static std::string &trim_inplace(std::string &s) {
+        size_t b = s.find_first_not_of(" \t\r\n");
+        if (b == std::string::npos) { s.clear(); return s; }
+        size_t e = s.find_last_not_of(" \t\r\n");
+        s = s.substr(b, e - b + 1);
+        return s;
+    }
+
+    // 简易 chunked 解码（gunicorn 等服务器可能启用分块传输）
+    static std::string decode_chunked(const std::string &in) {
+        std::string out;
+        size_t pos = 0;
+        while (pos < in.size()) {
+            size_t eol = in.find("\r\n", pos);
+            if (eol == std::string::npos) break;
+            unsigned long size = strtoul(in.substr(pos, eol - pos).c_str(), nullptr, 16);
+            if (size == 0) break;
+            size_t data_start = eol + 2;
+            if (data_start + size > in.size()) break;
+            out.append(in, data_start, size);
+            pos = data_start + size + 2;
+        }
+        return out;
+    }
+
+    // 跨平台 HTTP POST（Windows: WinSock2 / POSIX: socket，用于开发测试）
+    static bool http_post(const ParsedURL &url, const std::string &body, int timeout_seconds, std::string &response) {
+#ifdef _WIN32
+        WSADATA wsa;
+        static bool wsa_ready = false;
+        if (!wsa_ready) {
+            if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) return false;
+            wsa_ready = true;
+        }
+#endif
+        struct addrinfo hints{}, *res = nullptr;
+        hints.ai_family = AF_INET;
+        hints.ai_socktype = SOCK_STREAM;
+        if (getaddrinfo(url.host.c_str(), std::to_string(url.port).c_str(), &hints, &res) != 0 || !res)
+            return false;
+
+        int fd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+        if (fd < 0) { freeaddrinfo(res); return false; }
+
+#ifdef _WIN32
+        DWORD timeout_ms = timeout_seconds * 1000;
+        setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, (const char *) &timeout_ms, sizeof(timeout_ms));
+        setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, (const char *) &timeout_ms, sizeof(timeout_ms));
+#else
+        struct timeval tv{};
+        tv.tv_sec = timeout_seconds;
+        setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
+        setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv));
+#endif
+
+        bool ok = connect(fd, res->ai_addr, (int) res->ai_addrlen) == 0;
+        freeaddrinfo(res);
+        if (!ok) {
+#ifdef _WIN32
+            closesocket(fd);
+#else
+            close(fd);
+#endif
+            return false;
         }
 
-        FILE* fp = fopen(df, "wb");
-        if (!fp) { printf(VMProtectDecryptStringA("Open temp .dll failed")); DeleteFileA(df); return; }
-        if (fwrite(dllBytes, 1, dllSize, fp) != dllSize) {
-            fclose(fp); printf(VMProtectDecryptStringA("Write .dll failed")); DeleteFileA(df); return;
+        std::string request;
+        request += "POST " + url.path + " HTTP/1.1\r\n";
+        request += "Host: " + url.host + (url.port != 80 ? ":" + std::to_string(url.port) : "") + "\r\n";
+        request += "Content-Type: application/x-www-form-urlencoded\r\n";
+        request += "Content-Length: " + std::to_string(body.size()) + "\r\n";
+        request += "Connection: close\r\n\r\n";
+        request += body;
+
+        ok = send(fd, request.c_str(), (int) request.size(), 0) == (int) request.size();
+
+        std::string raw;
+        if (ok) {
+            char buf[4096];
+            int n;
+            while ((n = recv(fd, buf, sizeof(buf), 0)) > 0)
+                raw.append(buf, (size_t) n);
         }
-        fclose(fp);
 
-        HMODULE g_hLib = LoadLibraryA(df);
-        if (!g_hLib) { printf(VMProtectDecryptStringA("Failed to load authorization library")); DeleteFileA(df); return; }
+#ifdef _WIN32
+        closesocket(fd);
+#else
+        close(fd);
+#endif
+        if (!ok || raw.empty()) return false;
 
-        auth = (authorization)GetProcAddress(g_hLib, VMProtectDecryptStringA("authorization"));
-        if (!auth) { printf(VMProtectDecryptStringA("Failed to locate authorization function")); FreeLibrary(g_hLib); DeleteFileA(df); return; }
+        size_t header_end = raw.find("\r\n\r\n");
+        if (header_end == std::string::npos) return false;
+        std::string headers = raw.substr(0, header_end);
+        std::string content = raw.substr(header_end + 4);
+
+        std::string lower;
+        lower.reserve(headers.size());
+        for (char c : headers) lower += (char) std::tolower((unsigned char) c);
+        if (lower.find("transfer-encoding: chunked") != std::string::npos)
+            content = decode_chunked(content);
+
+        response = content;
+        return true;
+    }
+
+    // 从工作目录 license.key 读取密钥（支持 BOM 与首尾空白）
+    static std::string read_key_from_file() {
+        FILE *f = fopen(YCP_STR("license.key"), "rb");
+        if (!f) return "";
+        std::string key;
+        char buf[512];
+        size_t n;
+        while ((n = fread(buf, 1, sizeof(buf), f)) > 0) key.append(buf, n);
+        fclose(f);
+        if (key.size() >= 3 && (unsigned char) key[0] == 0xEF && (unsigned char) key[1] == 0xBB && (unsigned char) key[2] == 0xBF)
+            key = key.substr(3);
+        return trim_inplace(key);
+    }
+
+#ifdef _WIN32
+    // —— 无资源文件的密钥输入对话框（内存构造 DLGTEMPLATE）——
+    struct KeyDialogCtx {
+        char key[512];
+        char title[160];
+    };
+
+    static INT_PTR CALLBACK key_dlg_proc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
+        switch (msg) {
+            case WM_INITDIALOG: {
+                KeyDialogCtx *ctx = (KeyDialogCtx *) lp;
+                SetWindowLongPtrA(hwnd, GWLP_USERDATA, (LONG_PTR) ctx);
+                SetWindowTextA(hwnd, ctx->title);
+                return TRUE;
+            }
+            case WM_COMMAND:
+                if (LOWORD(wp) == IDOK || LOWORD(wp) == IDCANCEL) {
+                    KeyDialogCtx *ctx = (KeyDialogCtx *) GetWindowLongPtrA(hwnd, GWLP_USERDATA);
+                    if (LOWORD(wp) == IDOK) GetDlgItemTextA(hwnd, 101, ctx->key, sizeof(ctx->key));
+                    EndDialog(hwnd, LOWORD(wp) == IDOK ? 1 : 0);
+                    return TRUE;
+                }
+                break;
+            case WM_CLOSE:
+                EndDialog(hwnd, 0);
+                return TRUE;
+        }
+        return FALSE;
+    }
+
+    static std::vector<BYTE> build_key_dlg_template() {
+        std::vector<BYTE> buf;
+        auto put = [&buf](const void *data, size_t len) {
+            const BYTE *p = (const BYTE *) data;
+            buf.insert(buf.end(), p, p + len);
+        };
+        auto align4 = [&buf]() { while (buf.size() % sizeof(DWORD)) buf.push_back(0); };
+        auto put_word = [&buf](WORD w) { buf.push_back((BYTE) w); buf.push_back((BYTE) (w >> 8)); };
+        auto put_wstr = [&buf, &align4, &put_word](const wchar_t *s) {
+            align4();
+            while (*s) { put_word((WORD) *s); s++; }
+            put_word(0);
+        };
+
+        DLGTEMPLATE dt{};
+        dt.style = WS_POPUP | WS_CAPTION | WS_SYSMENU | DS_MODALFRAME | DS_CENTER;
+        dt.cdit = 3;
+        dt.cx = 240;
+        dt.cy = 76;
+        put(&dt, sizeof(dt));
+        put_word(0);                    // 菜单：无
+        put_word(0);                    // 窗口类：预定义对话框类
+        put_wstr(L"YumeCloudProtection");
+
+        // 依次注册 Static(提示) / Edit(输入) / Button(确定)，类原子 0x0082/0x0081/0x0080
+        auto item = [&](DWORD style, WORD x, WORD y, WORD cx, WORD cy, WORD id, WORD class_atom, const wchar_t *title) {
+            align4();
+            DLGITEMTEMPLATE it{};
+            it.style = style;
+            it.x = x; it.y = y; it.cx = cx; it.cy = cy;
+            it.id = id;
+            put(&it, sizeof(it));
+            put_word(class_atom);
+            put_wstr(title);
+            put_word(0);                // creation data：无
+        };
+
+        item(WS_CHILD | WS_VISIBLE | SS_LEFT, 10, 10, 220, 8, (WORD) -1, 0x0082, L"Please enter your license key:");
+        item(WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER | ES_AUTOHSCROLL, 10, 24, 220, 14, 101, 0x0081, L"");
+        item(WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_DEFPUSHBUTTON, 90, 48, 60, 14, IDOK, 0x0080, L"OK");
+        return buf;
+    }
+
+    static std::string prompt_key_dialog(const char *application_name) {
+        KeyDialogCtx ctx{};
+        snprintf(ctx.title, sizeof(ctx.title), "%s - License", application_name);
+        std::vector<BYTE> tmpl = build_key_dlg_template();
+        INT_PTR r = DialogBoxIndirectParamA((HINSTANCE) GetModuleHandleA(nullptr),
+                                            (LPCDLGTEMPLATE) tmpl.data(), nullptr, key_dlg_proc, (LPARAM) &ctx);
+        if (r == 1 && ctx.key[0]) return std::string(ctx.key);
+        return "";
+    }
+#endif
+
+    static std::string prompt_key(const char *application_name) {
+#ifdef _WIN32
+        return prompt_key_dialog(application_name);
+#else
+        fprintf(stderr, "[%s] %s", application_name, YCP_STR("please enter your license key: "));
+        char buf[512] = {0};
+        if (!fgets(buf, sizeof(buf), stdin)) return "";
+        std::string key(buf);
+        return trim_inplace(key);
+#endif
+    }
+
+    static void notify_invalid_key(const char *application_name) {
+#ifdef _WIN32
+        MessageBoxA(nullptr, YCP_STR("Invalid or expired license key."), application_name, MB_ICONERROR | MB_OK);
+#else
+        fprintf(stderr, "[%s] %s\n", application_name, YCP_STR("invalid or expired license key"));
+#endif
+    }
+
+    bool auth(const char *applicationName, const char *serverURL) {
+        YCP_PROTECT_BEGIN();
+
+        ParsedURL url = parse_url(serverURL);
+        if (!url.valid) {
+            fprintf(stderr, "[YumeCloudProtection] %s: %s\n", YCP_STR("invalid authorization server URL"), serverURL);
+            YCP_PROTECT_END();
+            return false;
+        }
+
+        // 非交互来源：环境变量 → license.key 文件
+        std::string key;
+        const char *env = getenv(YCP_STR("YCP_LICENSE_KEY"));
+        if (env && *env) { key = env; trim_inplace(key); }
+        if (key.empty()) key = read_key_from_file();
+
+        // 交互模式（弹窗/控制台输入）最多尝试 3 次；非交互密钥只验证 1 次
+        bool interactive = key.empty();
+        int max_attempts = interactive ? 3 : 1;
+
+        for (int attempt = 0; attempt < max_attempts; attempt++) {
+            if (interactive)
+                key = prompt_key(applicationName);
+            if (key.empty())
+                break; // 用户取消
+
+            std::string body = std::string(YCP_STR("app=")) + url_encode(applicationName)
+                             + YCP_STR("&key=") + url_encode(key);
+            std::string response;
+            if (http_post(url, body, 10, response) && trim_inplace(response) == YCP_STR("success")) {
+                YCP_PROTECT_END();
+                return true;
+            }
+
+            if (attempt + 1 < max_attempts)
+                notify_invalid_key(applicationName);
+            key.clear();
+        }
+
+        fprintf(stderr, "[YumeCloudProtection] %s\n", YCP_STR("license validation failed"));
+        YCP_PROTECT_END();
+        return false;
     }
 
     jclass boolean_array_class;

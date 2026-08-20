@@ -22,15 +22,25 @@ public class Protect {
     private static final Logger logger = LoggerFactory.getLogger(Protect.class);
 
     public static void protect(Path cppDir, Path outputDir) {
+        String project = YumeCloudProtection.auth ? "YumeCloud_NativeLibrary.vmp" : "YumeCloud_NativeLibrary_NoAuth.vmp";
+
+        // VMProtect 为可选商业组件：vmp.exe 或对应 .vmp 工程缺失时跳过加壳，直接打包未加壳的原生库
+        if (!Files.exists(cppDir.resolve("vmp.exe")) || !Files.exists(cppDir.resolve(project))) {
+            logger.info("VMProtect not found (vmp.exe or {} missing). Skipping protection, shipping the unprotected native library.", project);
+            try {
+                Path library = cppDir.resolve("YumeCloud_NativeLibrary.dll");
+                if (!Files.exists(library)) library = cppDir.resolve("YumeCloud_NativeLibrary");
+                Util.addFileToZip("YumeCloudProtection/YCVM",
+                        Files.readAllBytes(library), new File(outputDir.toAbsolutePath().toString()));
+            } catch (IOException e) {
+                logger.error("Failed to package the unprotected native library.", e);
+            }
+            return;
+        }
+
         logger.info("Start protecting native library...");
         try {
-            String protectCommand = "vmp.exe ";
-
-            if (YumeCloudProtection.auth) {
-                protectCommand += "YumeCloud_NativeLibrary.vmp";
-            } else {
-                protectCommand += "YumeCloud_NativeLibrary_NoAuth.vmp";
-            }
+            String protectCommand = "vmp.exe " + project;
 
             ProcessBuilder processBuilder = new ProcessBuilder();
             processBuilder.command("cmd", "/c", protectCommand);

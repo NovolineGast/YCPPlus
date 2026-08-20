@@ -90,6 +90,15 @@ public class Util {
         }
     }
 
+    // 资源存在时复制并返回 true，缺失时静默跳过（用于可选的 VMProtect 商业组件）
+    public static boolean copyResourceIfExists(String from, Path to) throws IOException {
+        try (InputStream in = YumeCloudProtection.class.getClassLoader().getResourceAsStream(from)) {
+            if (in == null) return false;
+            Files.copy(in, to.resolve(Paths.get(from).getFileName()), StandardCopyOption.REPLACE_EXISTING);
+            return true;
+        }
+    }
+
     private static String writeStreamToString(InputStream stream) {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -152,6 +161,27 @@ public class Util {
                 continue;
             }
             result.append("\\u").append(String.format("%04x", (int) c));
+        }
+        return result.toString();
+    }
+
+    // 转义为合法 C++ 字符串字面量（用于生成的 .cpp 源码中的字符串常量）
+    public static String escapeString(String value) {
+        StringBuilder result = new StringBuilder(value.length());
+        for (char c : value.toCharArray()) {
+            switch (c) {
+                case '\\': result.append("\\\\"); break;
+                case '"':  result.append("\\\""); break;
+                case '\n': result.append("\\n");  break;
+                case '\r': result.append("\\r");  break;
+                case '\t': result.append("\\t");  break;
+                default:
+                    if (c >= 32 && c <= 126) {
+                        result.append(c);
+                    } else {
+                        result.append(String.format("\\x%02x\"\"", (int) c & 0xFF));
+                    }
+            }
         }
         return result.toString();
     }

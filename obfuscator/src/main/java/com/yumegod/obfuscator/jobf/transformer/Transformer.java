@@ -3,7 +3,6 @@ package com.yumegod.obfuscator.jobf.transformer;
 import com.yumegod.obfuscator.jobf.protection.Protector;
 import com.yumegod.obfuscator.jobf.transformer.impl.*;
 import com.yumegod.obfuscator.jobf.transformer.impl.flow.ControlFlowObfuscator;
-import com.yumegod.obfuscator.jobf.transformer.impl.flow.v2.FlowObfuscator;
 import com.yumegod.obfuscator.jobf.transformer.impl.fun.DeadCodeRemover;
 import com.yumegod.obfuscator.jobf.transformer.impl.fun.DirectoryClassFileTransformer;
 import com.yumegod.obfuscator.jobf.transformer.impl.fun.WatermarkTransformer;
