@@ -34,8 +34,8 @@ function Dashboard({ onLogout }) {
     loadData();
   }, []);
 
-  const handleGenerate = async (amount, days) => {
-    await keys.generate(amount, days);
+  const handleGenerate = async (amount, days, prefix) => {
+    await keys.generate(amount, days, prefix);
     await loadData();
   };
 

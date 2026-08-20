@@ -30,8 +30,8 @@ export const dashboard = {
 export const keys = {
   getAll: () => api.get('/keys'),
 
-  generate: (amount, days) =>
-    api.post('/keys/generate', { amount, days }),
+  generate: (amount, days, prefix) =>
+    api.post('/keys/generate', { amount, days, prefix }),
 
   ban: (key) => api.post(`/keys/${key}/ban`),
 

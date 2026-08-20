@@ -4,6 +4,7 @@ import styles from './GenerateModal.module.css';
 function GenerateModal({ onGenerate, onClose }) {
   const [amount, setAmount] = useState(1);
   const [days, setDays] = useState(30);
+  const [prefix, setPrefix] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -23,7 +24,7 @@ function GenerateModal({ onGenerate, onClose }) {
 
     setLoading(true);
     try {
-      await onGenerate(amount, days);
+      await onGenerate(amount, days, prefix);
       onClose();
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to generate keys');
@@ -72,6 +73,22 @@ function GenerateModal({ onGenerate, onClose }) {
               onChange={(e) => setDays(parseInt(e.target.value))}
               className={styles.input}
               required
+            />
+          </div>
+
+          <div className={styles.field}>
+            <label htmlFor="prefix">
+              Custom Prefix
+              <span className={styles.hint}>Optional, default: YCP</span>
+            </label>
+            <input
+              id="prefix"
+              type="text"
+              value={prefix}
+              onChange={(e) => setPrefix(e.target.value.toUpperCase())}
+              className={styles.input}
+              placeholder="YCP"
+              maxLength="10"
             />
           </div>
 

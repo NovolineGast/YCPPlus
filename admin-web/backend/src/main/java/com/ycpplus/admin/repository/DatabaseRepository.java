@@ -22,26 +22,20 @@ public class DatabaseRepository {
     public void initDatabase() {
         try (Connection conn = getConnection(); Statement stmt = conn.createStatement()) {
             // Create admins table
-            stmt.execute("""
-                CREATE TABLE IF NOT EXISTS admins (
-                    app_name TEXT PRIMARY KEY,
-                    password_hash TEXT NOT NULL,
-                    created_at TEXT NOT NULL
-                )
-            """);
+            stmt.execute("CREATE TABLE IF NOT EXISTS admins (" +
+                    "app_name TEXT PRIMARY KEY, " +
+                    "password_hash TEXT NOT NULL, " +
+                    "created_at TEXT NOT NULL)");
 
             // Create keys table
-            stmt.execute("""
-                CREATE TABLE IF NOT EXISTS license_keys (
-                    key TEXT PRIMARY KEY,
-                    app_name TEXT NOT NULL,
-                    created_at TEXT NOT NULL,
-                    expires_at TEXT,
-                    last_login TEXT,
-                    banned INTEGER DEFAULT 0,
-                    login_count INTEGER DEFAULT 0
-                )
-            """);
+            stmt.execute("CREATE TABLE IF NOT EXISTS license_keys (" +
+                    "key TEXT PRIMARY KEY, " +
+                    "app_name TEXT NOT NULL, " +
+                    "created_at TEXT NOT NULL, " +
+                    "expires_at TEXT, " +
+                    "last_login TEXT, " +
+                    "banned INTEGER DEFAULT 0, " +
+                    "login_count INTEGER DEFAULT 0)");
         } catch (SQLException e) {
             throw new RuntimeException("Failed to initialize database", e);
         }

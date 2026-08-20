@@ -24,6 +24,10 @@ public class LicenseService {
     }
 
     public List<String> generateKeys(String appName, int amount, int days) {
+        return generateKeys(appName, amount, days, null);
+    }
+
+    public List<String> generateKeys(String appName, int amount, int days, String customPrefix) {
         if (amount < 1 || amount > 50) {
             throw new IllegalArgumentException("Amount must be between 1 and 50");
         }
@@ -31,12 +35,16 @@ public class LicenseService {
             throw new IllegalArgumentException("Days must be between 1 and 9999");
         }
 
+        String prefix = (customPrefix != null && !customPrefix.trim().isEmpty())
+            ? customPrefix.trim().toUpperCase() + "-"
+            : KEY_PREFIX;
+
         List<String> keys = new ArrayList<>();
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime expiresAt = now.plusDays(days);
 
         for (int i = 0; i < amount; i++) {
-            String key = generateUniqueKey();
+            String key = generateUniqueKey(prefix);
             LicenseKey licenseKey = new LicenseKey(
                 key, appName, now, expiresAt, null, false, 0
             );
@@ -80,12 +88,12 @@ public class LicenseService {
         );
     }
 
-    private String generateUniqueKey() {
-        // Generate format: YCP-XXXX-XXXX-XXXX
+    private String generateUniqueKey(String prefix) {
+        // Generate format: PREFIX-XXXX-XXXX-XXXX
         String part1 = generateRandomPart();
         String part2 = generateRandomPart();
         String part3 = generateRandomPart();
-        return KEY_PREFIX + part1 + "-" + part2 + "-" + part3;
+        return prefix + part1 + "-" + part2 + "-" + part3;
     }
 
     private String generateRandomPart() {

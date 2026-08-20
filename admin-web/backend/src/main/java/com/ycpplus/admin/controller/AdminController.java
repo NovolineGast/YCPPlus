@@ -56,7 +56,12 @@ public class AdminController {
             @RequestBody GenerateKeysRequest request) {
         try {
             String appName = extractAppName(authHeader);
-            List<String> keys = licenseService.generateKeys(appName, request.getAmount(), request.getDays());
+            List<String> keys = licenseService.generateKeys(
+                appName,
+                request.getAmount(),
+                request.getDays(),
+                request.getPrefix()
+            );
             return ResponseEntity.ok(Map.of("keys", keys));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
