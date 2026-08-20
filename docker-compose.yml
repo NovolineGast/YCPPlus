@@ -1,11 +1,11 @@
 version: '3.8'
 
 services:
-  # Python 版本授权服务器
+  # Python 版本授权服务器（含 Web 管理面板）
   ycp-auth-python:
     build:
-      context: ./server_python
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: server_python/Dockerfile
     container_name: ycp-auth-python
     ports:
       - "13337:13337"
@@ -15,11 +15,11 @@ services:
     environment:
       - FLASK_ENV=production
 
-  # Go 版本授权服务器（高性能）
+  # Go 版本授权服务器（高性能，含 Web 管理面板）
   ycp-auth-go:
     build:
-      context: ./server_go
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: server_go/Dockerfile
     container_name: ycp-auth-go
     ports:
       - "13338:13337"  # 使用不同端口避免冲突
