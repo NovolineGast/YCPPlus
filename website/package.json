@@ -1,0 +1,15 @@
+{
+  "name": "ycpplus-website",
+  "private": true,
+  "version": "1.0.0",
+  "description": "YCPPlus 官网 — 基于 Vite 的多页面静态站点（首页 + 文档）",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.4.11"
+  }
+}

@@ -46,3 +46,6 @@ docker-compose.override.yml
 *.tmp
 *.bak
 summary.txt
+
+# Node (website)
+node_modules/
