@@ -4,21 +4,26 @@
 
 ```
 OpenYCP/
-├── server_python/          # Python Flask 实现
-│   ├── app.py             # 主应用
+├── server_python/          # Python Flask 实现（含 Web 管理面板）
+│   ├── app.py             # 主应用（授权 API + Web 面板 API + 静态文件）
 │   ├── requirements.txt   # Python 依赖
-│   ├── Dockerfile         # Docker 镜像
+│   ├── Dockerfile         # Docker 镜像（多阶段：自动构建前端）
+│   ├── web/               # 前端构建产物（npm run build 生成）
 │   └── README_CN.md       # Python 版文档
-├── server_go/             # Go Gin 实现（高性能）
-│   ├── main.go            # 主应用
+├── server_go/             # Go Gin 实现（高性能，含 Web 管理面板）
+│   ├── main.go            # 主应用（授权 API + Web 面板 API + embed 前端）
 │   ├── go.mod             # Go 依赖
-│   ├── Dockerfile         # Docker 镜像
+│   ├── Dockerfile         # Docker 镜像（多阶段：自动构建前端）
+│   ├── web/               # 前端构建产物（embed 嵌入二进制）
 │   └── README_CN.md       # Go 版文档
+├── admin-web/             # Web 管理面板前端源码（React，构建后嵌入服务器）
 ├── nginx/                 # Nginx 反向代理配置
 │   └── nginx.conf
 ├── docker-compose.yml     # Docker Compose 编排
 └── DEPLOYMENT.md          # 本文档
 ```
+
+> **Web 管理面板已内置**: 启动任一授权服务器后，浏览器访问 `http://localhost:13337/` 即可使用 Web 管理面板（登录页点 "First time? Initialize admin" 初始化账号，与原生协议共用同一账号体系）。
 
 ---
 

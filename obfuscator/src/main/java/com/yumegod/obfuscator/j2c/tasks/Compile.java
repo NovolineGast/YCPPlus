@@ -42,8 +42,12 @@ public class Compile {
 
             command.append("@" + sources.getAbsolutePath()).append(" ");
             command.append("-L\"" + cppDir.toAbsolutePath()).append("\" ");
-            command.append("-lAuthorization").append(" ");
-            command.append("-lVMProtectSDK64").append(" ");
+            // WinSock2：开放授权客户端的 HTTP 通信所需（原由闭源 Authorization.lib 传递链接）
+            command.append("-lws2_32").append(" ");
+            // VMProtect SDK 为可选组件：仅当用户在 resources 中提供了官方 lib 时链接（默认使用内置 no-op 桩）
+            if (Files.exists(cppDir.resolve("VMProtectSDK64.lib"))) {
+                command.append("-lVMProtectSDK64").append(" ");
+            }
             command.append("-shared");
 
             // For debugging

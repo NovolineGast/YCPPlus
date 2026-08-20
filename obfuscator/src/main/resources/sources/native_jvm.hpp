@@ -12,10 +12,10 @@
 #define NATIVE_JVM_HPP_GUARD
 
 namespace native_jvm::utils {
-    using authorization = const char* (*)(const char*, const char*);
-    extern authorization auth;
-    
-    void init_auth(const unsigned char* dllBytes, std::size_t dllSize);
+    // 开放授权客户端：直接向授权服务器 POST /login 验证密钥（替代闭源 Authorization.dll）
+    // 密钥来源优先级：环境变量 YCP_LICENSE_KEY → 工作目录 license.key → 交互输入（Windows 为密钥对话框）
+    // 验证失败返回 false，由 JNI_OnLoad 返回 JNI_ERR 终止加载
+    bool auth(const char* applicationName, const char* serverURL);
 
     void init_utils(JNIEnv *env);
 

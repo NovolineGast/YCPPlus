@@ -39,7 +39,6 @@ public class ClassSourceBuilder implements AutoCloseable {
 
     public void addHeader(int strings, int classes, int methods, int fields) throws IOException {
         cppWriter.append("#include \"../native_jvm.hpp\"\n");
-        cppWriter.append("#include \"../Authorization.h\"\n");
         cppWriter.append("#include \"../VMProtectSDK.h\"\n");
         cppWriter.append("#include <string>\n");
         cppWriter.append("#include \"").append(getHppFilename()).append("\"\n");
