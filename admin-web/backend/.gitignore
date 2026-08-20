@@ -1,0 +1,7 @@
+target/
+data/
+*.db
+*.log
+.mvn/
+mvnw
+mvnw.cmd

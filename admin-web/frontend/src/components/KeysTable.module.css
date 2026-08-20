@@ -1,0 +1,147 @@
+.container {
+  background: var(--vault-surface);
+  border: 1px solid var(--vault-border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table thead {
+  background: var(--vault-deep);
+  border-bottom: 1px solid var(--vault-border);
+}
+
+.table th {
+  padding: 0.875rem 1rem;
+  text-align: left;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid var(--vault-border);
+  transition: background 0.15s;
+  cursor: pointer;
+}
+
+.table tbody tr:hover {
+  background: var(--vault-accent);
+}
+
+.table tbody tr.selected {
+  background: var(--vault-accent);
+}
+
+.table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.table td {
+  padding: 1rem;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+}
+
+.keyCode {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8125rem;
+  color: var(--cipher-blue);
+  background: var(--vault-deep);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.status {
+  display: inline-block;
+  padding: 0.25rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+}
+
+.date {
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.daysHint {
+  display: block;
+  font-size: 0.75rem;
+  opacity: 0.6;
+  margin-top: 0.125rem;
+}
+
+.centered {
+  text-align: center;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.actionBtn {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  background: var(--vault-deep);
+  border: 1px solid var(--vault-border);
+  color: var(--text-primary);
+  border-radius: 6px;
+  transition: all 0.15s;
+}
+
+.actionBtn:hover {
+  border-color: var(--cipher-blue);
+  color: var(--cipher-blue);
+}
+
+.actionBtn.danger:hover {
+  border-color: var(--cipher-alert);
+  color: var(--cipher-alert);
+}
+
+.empty {
+  padding: 3rem 2rem;
+  text-align: center;
+  color: var(--text-dim);
+}
+
+.empty p {
+  margin-bottom: 0.5rem;
+}
+
+.emptyHint {
+  font-size: 0.875rem;
+  opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+  .table th,
+  .table td {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .actionBtn {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+  }
+}
