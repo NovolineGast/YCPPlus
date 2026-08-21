@@ -1,0 +1,405 @@
+/* ═══════════════════════════════════════════════════════════
+   base.css — 基础样式 / 顶栏 / 按钮 / 页脚 / 公共交互组件
+   ═══════════════════════════════════════════════════════════ */
+
+/* ===== Reset & base ===== */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: var(--tracking-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+img { max-width: 100%; display: block; }
+
+::selection { background: var(--brand-100); color: var(--text-900); }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* 跳转到主内容（无障碍，仅聚焦时可见） */
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 100;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transform: translateY(-200%);
+  transition: transform 0.2s ease;
+}
+.skip-link:focus { transform: none; }
+
+/* ===== Header ===== */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+}
+
+.site-header .webbar {
+  background: rgba(28, 28, 30, 0.72);
+  color: var(--text-50);
+  height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 22px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.site-header .brand {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text-50);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 0.18s ease;
+}
+.site-header .brand:hover { opacity: 0.75; }
+
+.site-header .rail {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.site-header .nav-link {
+  height: 32px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-300);
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  transition: background-color 0.18s ease, color 0.18s ease;
+}
+.site-header .nav-link:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-50);
+}
+.site-header .nav-link:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+.site-header .nav-link.active {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font-weight: 600;
+}
+
+/* ===== 移动端菜单 ===== */
+.menu-toggle {
+  display: none;
+  margin-left: auto;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text-50);
+  cursor: pointer;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+.menu-toggle span {
+  display: block;
+  width: 18px;
+  height: 1.5px;
+  background: currentColor;
+  border-radius: 2px;
+  transition: transform 0.25s ease, opacity 0.2s ease;
+}
+.menu-toggle[aria-expanded='true'] span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.menu-toggle[aria-expanded='true'] span:nth-child(2) { opacity: 0; }
+.menu-toggle[aria-expanded='true'] span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+.mobile-menu {
+  background: rgba(28, 28, 30, 0.94);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.32s ease, opacity 0.25s ease;
+}
+.mobile-menu.open { max-height: 260px; opacity: 1; }
+.mobile-menu .mobile-link {
+  display: flex;
+  align-items: center;
+  height: 46px;
+  padding: 0 22px;
+  color: var(--text-300);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  transition: background-color 0.18s ease, color 0.18s ease;
+}
+.mobile-menu .mobile-link:hover,
+.mobile-menu .mobile-link.active {
+  color: var(--text-50);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* ===== Main ===== */
+main { padding-top: 44px; display: block; }
+
+/* ===== 按钮系统（胶囊形，Apple 风格） ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 48px;
+  padding: 0 24px;
+  border: none;
+  border-radius: 999px;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: var(--tracking-normal);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: filter 0.18s ease, background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+.btn:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  box-shadow: var(--shadow-sm);
+}
+.btn-primary:hover { filter: brightness(0.96); }
+
+.btn-secondary {
+  background: var(--secondary);
+  color: var(--secondary-foreground);
+  box-shadow: var(--shadow-xs);
+}
+.btn-secondary:hover { background: var(--muted); }
+
+.btn-lg { height: 56px; padding: 0 28px; font-size: 16px; }
+
+/* 深色区块上的按钮 */
+.btn-on-dark {
+  background: var(--text-50);
+  color: var(--background-800);
+  box-shadow: var(--shadow-sm);
+}
+.btn-on-dark:hover { filter: brightness(0.96); }
+
+.btn-outline-dark {
+  background: transparent;
+  color: var(--text-50);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: none;
+}
+.btn-outline-dark:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* ===== Footer ===== */
+.site-footer {
+  background: var(--background-100);
+  border-top: 1px solid var(--border);
+  padding: 48px 22px 24px;
+}
+.footer-inner {
+  max-width: 980px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 32px;
+}
+.footer-brand-col { max-width: 340px; }
+.footer-brand {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--foreground);
+  margin-bottom: 8px;
+}
+.footer-desc {
+  font-size: 13px;
+  color: var(--muted-foreground);
+  line-height: 1.5;
+  max-width: 320px;
+  margin: 0;
+}
+.footer-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  margin-bottom: 12px;
+}
+.footer-link {
+  display: block;
+  font-size: 13px;
+  color: var(--foreground);
+  text-decoration: none;
+  padding: 4px 0;
+  transition: color 0.18s ease;
+}
+.footer-link:hover { color: var(--primary); }
+.footer-tech {
+  display: block;
+  font-size: 13px;
+  color: var(--muted-foreground);
+  padding: 3px 0;
+}
+.footer-bottom {
+  max-width: 980px;
+  margin: 32px auto 0;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+
+/* 文档页页脚与内容同宽 */
+.page-docs .footer-inner,
+.page-docs .footer-bottom { max-width: 1040px; }
+.page-docs .site-footer { margin-top: 64px; }
+
+/* ===== 滚动进入动画 ===== */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal.is-visible { opacity: 1; transform: none; }
+
+/* Hero 入场动画（加载即播放） */
+.reveal-hero {
+  opacity: 0;
+  transform: translateY(18px);
+  animation: hero-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(var(--d, 0) * 90ms);
+}
+@keyframes hero-in {
+  to { opacity: 1; transform: none; }
+}
+
+/* ===== 返回顶部 ===== */
+.back-to-top {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 60;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--foreground);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease, background-color 0.18s ease;
+}
+.back-to-top.visible { opacity: 1; transform: none; pointer-events: auto; }
+.back-to-top:hover { background: var(--secondary); }
+.back-to-top svg { width: 18px; height: 18px; }
+
+/* ===== 代码复制按钮 ===== */
+.code-block { position: relative; }
+
+.copy-btn {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--muted-foreground);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.code-block:hover .copy-btn,
+.code-block:focus-within .copy-btn,
+.copy-btn.copied { opacity: 1; }
+.copy-btn:hover { color: var(--foreground); border-color: var(--input); }
+.copy-btn.copied { color: var(--success); border-color: var(--success); }
+.copy-btn svg { width: 13px; height: 13px; }
+@media (hover: none) {
+  .copy-btn { opacity: 1; }
+}
+
+/* ===== 响应式 ===== */
+@media (max-width: 640px) {
+  .site-header .rail { display: none; }
+  .site-header .webbar { padding: 0 14px; }
+  .menu-toggle { display: flex; }
+}
+
+@media (max-width: 768px) {
+  .footer-inner { grid-template-columns: 1fr 1fr; gap: 24px; }
+  .footer-brand-col { grid-column: 1 / -1; max-width: none; }
+}
+
+@media (max-width: 480px) {
+  .footer-inner { grid-template-columns: 1fr; }
+  .back-to-top { right: 14px; bottom: 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+  .reveal,
+  .reveal-hero { opacity: 1 !important; transform: none !important; }
+}

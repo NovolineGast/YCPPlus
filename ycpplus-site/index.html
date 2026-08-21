@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YCPPlus — 保护每一行代码</title>
+  <meta name="description" content="YCPPlus：企业级 Java 代码混淆保护工具与自托管授权服务器。从字节码加密到 Native 转换，注解驱动的全链路代码安全方案。">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/css/tokens.css">
+  <link rel="stylesheet" href="/src/css/base.css">
+  <link rel="stylesheet" href="/src/css/home.css">
+</head>
+<body class="page-home">
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <header class="site-header" id="site-header">
+    <nav class="webbar" aria-label="YCPPlus 全局导航">
+      <a href="index.html" class="brand">YCPPlus</a>
+      <div class="rail">
+        <a href="index.html" class="nav-link active" aria-current="page">首页</a>
+        <a href="docs.html" class="nav-link">文档</a>
+        <a href="https://github.com/NovolineGast/YCPPlus" target="_blank" rel="noopener" class="nav-link">GitHub</a>
+      </div>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="打开菜单">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="index.html" class="mobile-link active" aria-current="page">首页</a>
+      <a href="docs.html" class="mobile-link">文档</a>
+      <a href="https://github.com/NovolineGast/YCPPlus" target="_blank" rel="noopener" class="mobile-link">GitHub</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ===== 1. HERO ===== -->
+    <section id="hero" class="section section--light">
+      <div class="hero-inner">
+        <span class="hero-eyebrow reveal-hero" style="--d:0">YumeCloud Protection Plus</span>
+        <h1 class="hero-title reveal-hero" style="--d:1">保护每一行代码</h1>
+        <p class="hero-subtitle reveal-hero" style="--d:2">企业级 Java 代码混淆保护工具与自托管授权服务器</p>
+        <div class="hero-cta-row reveal-hero" style="--d:3">
+          <a class="btn btn-primary btn-lg" href="docs.html">快速开始 ›</a>
+          <a class="btn btn-secondary" href="https://github.com/NovolineGast/YCPPlus" target="_blank" rel="noopener">GitHub</a>
+        </div>
+        <div class="hero-stats reveal-hero" style="--d:4">
+          <span><b class="stat-num" data-count="10" data-suffix="+">10+</b> 混淆技术</span>
+          <span class="dot">·</span>
+          <span><b class="stat-num" data-count="15000">15,000</b> req/s</span>
+          <span class="dot">·</span>
+          <span>MIT 开源</span>
+        </div>
+      </div>
+      <div class="hero-media reveal-hero" style="--d:5">
+        <img src="/src/assets/hero.jpg" alt="YCPPlus 代码混淆可视化" width="2560" height="1440" fetchpriority="high" decoding="async">
+      </div>
+    </section>
+
+    <!-- ===== 2. FEATURES ===== -->
+    <section id="features" class="section section--gray">
+      <div class="section-inner">
+        <div class="section-head reveal">
+          <span class="eyebrow">混淆保护技术</span>
+          <h2>从字节码到 Native 代码</h2>
+        </div>
+        <div class="feature-grid">
+          <div class="reveal">
+            <h3 class="feature-col-head">核心混淆</h3>
+            <div class="feature-stack">
+              <article class="feature-card">
+                <span class="feat-eyebrow">@StringObfuscate</span>
+                <span class="feat-title">字符串加密</span>
+                <span class="feat-desc">字符串常量加密存储，运行时动态解密</span>
+              </article>
+              <article class="feature-card">
+                <span class="feat-eyebrow">@NumberObfuscate</span>
+                <span class="feat-title">数字混淆</span>
+                <span class="feat-desc">数值计算表达式复杂化</span>
+              </article>
+              <article class="feature-card">
+                <span class="feat-eyebrow">@FlowObfuscate</span>
+                <span class="feat-title">控制流混淆</span>
+                <span class="feat-desc">插入虚假分支和跳转</span>
+              </article>
+              <article class="feature-card">
+                <span class="feat-eyebrow">@CallEncryption</span>
+                <span class="feat-title">调用加密</span>
+                <span class="feat-desc">方法调用关系加密</span>
+              </article>
+              <article class="feature-card">
+                <span class="feat-eyebrow">@InvokeDynamic</span>
+                <span class="feat-title">动态调用</span>
+                <span class="feat-desc">invokedynamic 指令转换</span>
+              </article>
+              <article class="feature-card">
+                <span class="feat-eyebrow">@Rename</span>
+                <span class="feat-title">重命名</span>
+                <span class="feat-desc">类/方法/字段名随机化</span>
+              </article>
+            </div>
+          </div>
+          <div class="reveal">
+            <h3 class="feature-col-head">高级保护</h3>
+            <div class="feature-stack">
+              <article class="feature-card">
+                <span class="feat-eyebrow">@Native</span>
+                <span class="feat-title">Native 保护</span>
+                <span class="feat-desc">Java 转换为 C++ + VMProtect</span>
+              </article>
+              <article class="feature-card">
+                <span class="feat-eyebrow">@VMProtectVirtualization</span>
+                <span class="feat-title">虚拟化保护</span>
+                <span class="feat-desc">代码虚拟机执行</span>
+              </article>
+              <article class="feature-card">
+                <span class="feat-eyebrow">@VMProtectMutation</span>
+                <span class="feat-title">变异保护</span>
+                <span class="feat-desc">代码变异</span>
+              </article>
+              <article class="feature-card">
+                <span class="feat-eyebrow">@VMProtectUltra</span>
+                <span class="feat-title">终极保护</span>
+                <span class="feat-desc">最高级别保护</span>
+              </article>
+              <article class="feature-card">
+                <span class="feat-eyebrow">@DebuggerCheck</span>
+                <span class="feat-title">防调试</span>
+                <span class="feat-desc">运行时调试器检测</span>
+              </article>
+              <article class="feature-card">
+                <span class="feat-eyebrow">@TamperPrevention</span>
+                <span class="feat-title">防篡改</span>
+                <span class="feat-desc">代码完整性验证</span>
+              </article>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 3. PERFORMANCE ===== -->
+    <section id="performance" class="section section--light">
+      <div class="section-inner">
+        <div class="section-head reveal">
+          <span class="eyebrow">授权服务器性能</span>
+          <h2>Python vs Go</h2>
+        </div>
+        <div class="perf-cmp reveal">
+          <div class="cmp-wrap">
+            <div class="cmp">
+              <div class="c lbl">指标</div>
+              <div class="c head">Python (Flask)</div>
+              <div class="c head">Go (Gin)</div>
+              <div class="c lbl">吞吐量</div>
+              <div class="c val">~500 req/s</div>
+              <div class="c val">~15,000 req/s</div>
+              <div class="c lbl">响应时间 (P95)</div>
+              <div class="c val">200ms</div>
+              <div class="c val">10ms</div>
+              <div class="c lbl">内存占用</div>
+              <div class="c val">~50MB</div>
+              <div class="c val">~10MB</div>
+              <div class="c lbl">推荐场景</div>
+              <div class="c val">开发测试</div>
+              <div class="c val">生产环境</div>
+            </div>
+          </div>
+          <div class="perf-bars">
+            <div class="perf-bar-row">
+              <div class="perf-bar-label"><span>Python (Flask)</span><span class="perf-val">~500 req/s</span></div>
+              <div class="perf-bar-track"><div class="perf-bar-fill perf-bar-fill--muted" style="width:3.5%"></div></div>
+            </div>
+            <div class="perf-bar-row">
+              <div class="perf-bar-label"><span>Go (Gin)</span><span class="perf-val">~15,000 req/s</span></div>
+              <div class="perf-bar-track"><div class="perf-bar-fill perf-bar-fill--primary" style="width:100%"></div></div>
+            </div>
+          </div>
+          <p class="perf-callout">Go 版本性能是 Python 版本的 30 倍</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 4. SECURITY ===== -->
+    <section id="security" class="section section--gray">
+      <div class="section-inner">
+        <div class="section-head reveal">
+          <span class="eyebrow">安全特性</span>
+          <h2>多层防护体系</h2>
+        </div>
+        <div class="security-grid">
+          <article class="security-card reveal">
+            <h3 class="security-card-head">混淆器安全</h3>
+            <ul class="security-list">
+              <li><i data-icon="check" class="check-icon" aria-hidden="true"></i><span>多层混淆保护</span></li>
+              <li><i data-icon="check" class="check-icon" aria-hidden="true"></i><span>Native 代码转换</span></li>
+              <li><i data-icon="check" class="check-icon" aria-hidden="true"></i><span>VMProtect 虚拟化</span></li>
+              <li><i data-icon="check" class="check-icon" aria-hidden="true"></i><span>运行时防调试</span></li>
+              <li><i data-icon="check" class="check-icon" aria-hidden="true"></i><span>代码完整性验证</span></li>
+            </ul>
+          </article>
+          <article class="security-card reveal">
+            <h3 class="security-card-head">服务器安全</h3>
+            <ul class="security-list">
+              <li><i data-icon="check" class="check-icon" aria-hidden="true"></i><span>SHA256 密码哈希</span></li>
+              <li><i data-icon="check" class="check-icon" aria-hidden="true"></i><span>密钥过期检查</span></li>
+              <li><i data-icon="check" class="check-icon" aria-hidden="true"></i><span>密钥封禁机制</span></li>
+              <li><i data-icon="check" class="check-icon" aria-hidden="true"></i><span>SQL 注入防护</span></li>
+              <li><i data-icon="check" class="check-icon" aria-hidden="true"></i><span>限流保护 (10 req/s)</span></li>
+              <li><i data-icon="check" class="check-icon" aria-hidden="true"></i><span>SSL/TLS 支持</span></li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 5. CODE EXAMPLE ===== -->
+    <section id="code-example" class="section section--light">
+      <div class="section-inner">
+        <div class="section-head reveal">
+          <span class="eyebrow">快速开始</span>
+          <h2>注解驱动的代码保护</h2>
+        </div>
+        <div class="code-stack">
+          <div class="code-block reveal">
+            <span class="code-lang">Java</span>
+<pre>import com.yumegod.yumecloudprotection.annotations.*;
+
+public class MyApp {
+    <span class="tok-annotation">@StringObfuscate</span>
+    private static final String API_KEY = "secret_key_123";
+
+    <span class="tok-annotation">@NumberObfuscate</span>
+    private static final int MAX_USERS = 1000;
+
+    <span class="tok-annotation">@FlowObfuscate</span>
+    public void criticalMethod() {
+        <span class="tok-comment">// 核心业务逻辑</span>
+    }
+
+    <span class="tok-annotation">@Native</span>
+    <span class="tok-annotation">@VMProtectUltra</span>
+    public String validateLicense(String key) {
+        <span class="tok-comment">// 授权验证逻辑</span>
+    }
+}</pre>
+          </div>
+          <div class="code-block reveal">
+            <span class="code-lang">Bash</span>
+<pre>cd obfuscator
+gradle shadowJar
+java -jar build/libs/obfuscator-1.2.jar \
+  --input YourApp.jar \
+  --output YourApp-obfuscated.jar</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 6. PROJECT STRUCTURE ===== -->
+    <section id="structure" class="section section--gray">
+      <div class="section-inner">
+        <div class="section-head reveal">
+          <span class="eyebrow">项目结构</span>
+          <h2>模块化架构</h2>
+        </div>
+        <div class="code-stack">
+          <div class="code-block reveal">
+            <span class="code-lang">Tree</span>
+<pre>YCPPlus/
+├── obfuscator/          <span class="tok-comment"># 核心混淆引擎</span>
+├── obfuscatorgui/       <span class="tok-comment"># 图形界面</span>
+├── adminpanel/          <span class="tok-comment"># 管理面板</span>
+├── annotations/         <span class="tok-comment"># 混淆注解库</span>
+├── obfuscatorsdk/       <span class="tok-comment"># SDK 接口</span>
+├── server_python/       <span class="tok-comment"># Python 授权服务器</span>
+├── server_go/           <span class="tok-comment"># Go 授权服务器</span>
+├── nginx/               <span class="tok-comment"># 反向代理配置</span>
+├── tests/               <span class="tok-comment"># 测试套件</span>
+└── docker-compose.yml   <span class="tok-comment"># Docker 编排</span></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 7. CTA ===== -->
+    <section id="cta" class="section section--dark">
+      <div class="section-inner">
+        <div class="section-head section-head--dark reveal">
+          <span class="eyebrow">开始使用</span>
+          <h2>从混淆到授权，一站式掌控</h2>
+        </div>
+        <div class="cta-row reveal">
+          <a class="btn btn-on-dark" href="docs.html">查看文档 ›</a>
+          <a class="btn btn-outline-dark" href="https://github.com/NovolineGast/YCPPlus" target="_blank" rel="noopener">GitHub 仓库</a>
+        </div>
+        <p class="cta-meta reveal">MIT License — NovolineGast / YumeGod</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" id="site-footer">
+    <div class="footer-inner">
+      <div class="footer-col footer-brand-col">
+        <div class="footer-brand">YCPPlus</div>
+        <p class="footer-desc">企业级 Java 代码混淆保护工具与自托管授权服务器。从字节码加密到 Native 转换，注解驱动的全链路代码安全方案。</p>
+      </div>
+      <div class="footer-col">
+        <div class="footer-label">资源</div>
+        <a href="docs.html" class="footer-link">文档</a>
+        <a href="https://github.com/NovolineGast/YCPPlus" target="_blank" rel="noopener" class="footer-link">GitHub 仓库</a>
+        <a href="docs.html#quickstart" class="footer-link">快速开始</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-label">技术栈</div>
+        <span class="footer-tech">Java · Gradle</span>
+        <span class="footer-tech">Python · Flask</span>
+        <span class="footer-tech">Go · Gin</span>
+        <span class="footer-tech">Docker · Nginx</span>
+      </div>
+      <div class="footer-col">
+        <div class="footer-label">许可证</div>
+        <span class="footer-tech">MIT License</span>
+        <span class="footer-tech">NovolineGast</span>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 YCPPlus. MIT 开源协议。</span>
+    </div>
+  </footer>
+
+  <button class="back-to-top" id="back-to-top" type="button" aria-label="返回顶部">
+    <i data-icon="arrowUp" aria-hidden="true"></i>
+  </button>
+
+  <script type="module" src="/src/js/main.js"></script>
+</body>
+</html>

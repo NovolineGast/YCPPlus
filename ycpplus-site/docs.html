@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>文档 — YCPPlus</title>
+  <meta name="description" content="YCPPlus 使用文档：快速开始、混淆注解参考、授权服务器 API 与部署指南。">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/css/tokens.css">
+  <link rel="stylesheet" href="/src/css/base.css">
+  <link rel="stylesheet" href="/src/css/docs.css">
+</head>
+<body class="page-docs">
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <header class="site-header" id="site-header">
+    <nav class="webbar" aria-label="YCPPlus 全局导航">
+      <a href="index.html" class="brand">YCPPlus</a>
+      <div class="rail">
+        <a href="index.html" class="nav-link">首页</a>
+        <a href="docs.html" class="nav-link active" aria-current="page">文档</a>
+        <a href="https://github.com/NovolineGast/YCPPlus" target="_blank" rel="noopener" class="nav-link">GitHub</a>
+      </div>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="打开菜单">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="index.html" class="mobile-link">首页</a>
+      <a href="docs.html" class="mobile-link active" aria-current="page">文档</a>
+      <a href="https://github.com/NovolineGast/YCPPlus" target="_blank" rel="noopener" class="mobile-link">GitHub</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- 面包屑 -->
+    <div class="docs-breadcrumb">
+      <span class="crumb">文档</span>
+      <span class="sep">/</span>
+      <span class="crumb current" id="breadcrumb-current">快速开始</span>
+    </div>
+
+    <div class="docs-layout">
+      <!-- 粘性侧边栏 -->
+      <aside class="docs-sidebar">
+        <nav class="docs-nav no-scrollbar" aria-label="文档目录">
+          <a href="#quickstart"><span class="num">01</span>快速开始</a>
+          <a href="#annotations"><span class="num">02</span>混淆注解参考</a>
+          <a href="#authserver"><span class="num">03</span>授权服务器 API</a>
+          <a href="#deployment"><span class="num">04</span>部署指南</a>
+        </nav>
+      </aside>
+
+      <!-- 正文 -->
+      <div class="docs-content">
+        <!-- ===== 01 快速开始 ===== -->
+        <section class="docs-section" id="quickstart">
+          <h2>快速开始</h2>
+          <p class="lead">YCPPlus 提供两种核心功能：代码混淆保护和自托管授权服务器。以下是快速上手指南。</p>
+
+          <h3>使用混淆器</h3>
+          <p>在 Java 源码中通过注解标记需要保护的方法与字段，随后使用混淆器构建受保护的产物。</p>
+<pre class="code-block"><span class="lang-label">Java</span><code><span class="tok-k">import</span> com.yumegod.yumecloudprotection.annotations.*;
+
+<span class="tok-k">public class</span> MyApp {
+    <span class="tok-a">@StringObfuscate</span>
+    <span class="tok-k">private static final</span> String API_KEY = "secret_key_123";
+
+    <span class="tok-a">@NumberObfuscate</span>
+    <span class="tok-k">private static final int</span> MAX_USERS = 1000;
+
+    <span class="tok-a">@FlowObfuscate</span>
+    <span class="tok-k">public void</span> criticalMethod() {
+        <span class="tok-c">// 核心业务逻辑</span>
+    }
+
+    <span class="tok-a">@Native</span>
+    <span class="tok-a">@VMProtectUltra</span>
+    <span class="tok-k">public</span> String validateLicense(String key) {
+        <span class="tok-c">// 授权验证逻辑</span>
+    }
+}</code></pre>
+          <p>使用 Gradle 构建混淆器并处理目标 Jar：</p>
+<pre class="code-block"><span class="lang-label">Bash</span><code>cd obfuscator
+gradle shadowJar
+java -jar build/libs/obfuscator-1.2.jar \
+  --input YourApp.jar \
+  --output YourApp-obfuscated.jar</code></pre>
+          <p>或启动图形界面进行交互式配置：</p>
+<pre class="code-block"><span class="lang-label">Bash</span><code>cd obfuscatorgui
+gradle shadowJar
+java -jar build/libs/obfuscatorgui-1.2.jar</code></pre>
+
+          <h3>部署授权服务器</h3>
+          <p>使用 Docker Compose 一键启动授权服务，并完成管理员初始化：</p>
+<pre class="code-block"><span class="lang-label">Bash</span><code>docker-compose up -d ycp-auth-python
+docker-compose up -d ycp-auth-go
+curl -X POST http://localhost:13337/init_admin \
+  -d "app=MyApp" \
+  -d "password=YourSecurePassword"</code></pre>
+          <div class="callout">
+            <span class="callout-label">快速启动脚本</span>
+            <p>Windows 用户：运行 <code class="inline-code">start_server.bat</code></p>
+            <p>Linux/macOS 用户：运行 <code class="inline-code">./start_server.sh</code></p>
+          </div>
+
+          <h3>配置客户端</h3>
+          <p>修改混淆器源码中的授权服务器地址，指向你部署的服务器实例：</p>
+<pre class="code-block"><span class="lang-label">Java</span><code><span class="tok-c">// obfuscator/src/main/java/com/yumegod/obfuscator/YumeCloudProtection.java
+// 第 60 行</span>
+<span class="tok-k">public static</span> String authorizationURL = "http://你的服务器IP:13337/";</code></pre>
+          <p>重新构建混淆器以使配置生效：</p>
+<pre class="code-block"><span class="lang-label">Bash</span><code>cd obfuscator
+gradle shadowJar</code></pre>
+        </section>
+
+        <!-- ===== 02 混淆注解参考 ===== -->
+        <section class="docs-section" id="annotations">
+          <h2>混淆注解参考</h2>
+          <p class="lead">YCPPlus 提供丰富的注解驱动的混淆保护技术。所有注解位于 com.yumegod.yumecloudprotection.annotations 包下。</p>
+
+          <div class="table-wrap">
+            <div class="t docs-t">
+              <div class="c h"><span class="k">注解</span></div>
+              <div class="c h"><span class="k">描述</span></div>
+              <div class="c h"><span class="k">级别</span></div>
+
+              <div class="c mono">@StringObfuscate</div>
+              <div class="c">字符串常量加密存储</div>
+              <div class="c">基础</div>
+
+              <div class="c mono">@NumberObfuscate</div>
+              <div class="c">数值计算表达式复杂化</div>
+              <div class="c">基础</div>
+
+              <div class="c mono">@FlowObfuscate</div>
+              <div class="c">插入虚假分支和跳转</div>
+              <div class="c">基础</div>
+
+              <div class="c mono">@CallEncryption</div>
+              <div class="c">方法调用关系加密</div>
+              <div class="c">基础</div>
+
+              <div class="c mono">@InvokeDynamic</div>
+              <div class="c">invokedynamic 指令转换</div>
+              <div class="c">基础</div>
+
+              <div class="c mono">@Rename</div>
+              <div class="c">类/方法/字段名随机化</div>
+              <div class="c">基础</div>
+
+              <div class="c mono">@Native</div>
+              <div class="c">Java → C++ + VMProtect</div>
+              <div class="c level-adv">高级</div>
+
+              <div class="c mono">@VMProtectVirtualization</div>
+              <div class="c">代码虚拟机执行</div>
+              <div class="c level-adv">高级</div>
+
+              <div class="c mono">@VMProtectMutation</div>
+              <div class="c">代码变异</div>
+              <div class="c level-adv">高级</div>
+
+              <div class="c mono">@VMProtectUltra</div>
+              <div class="c">最高级别保护</div>
+              <div class="c level-adv">高级</div>
+
+              <div class="c mono">@DebuggerCheck</div>
+              <div class="c">运行时调试器检测</div>
+              <div class="c level-adv">高级</div>
+
+              <div class="c mono">@TamperPrevention</div>
+              <div class="c">代码完整性验证</div>
+              <div class="c level-adv">高级</div>
+            </div>
+          </div>
+
+          <p>组合使用基础与高级注解，可实现层层叠加的保护策略：</p>
+<pre class="code-block"><span class="lang-label">Java</span><code><span class="tok-a">@Native</span>
+<span class="tok-a">@VMProtectUltra</span>
+<span class="tok-k">public</span> String validateLicense(String key) {
+    <span class="tok-c">// 此方法将被转换为 C++ Native 代码
+    // 并应用最高级别虚拟化保护</span>
+    <span class="tok-k">return</span> checkKey(key);
+}</code></pre>
+        </section>
+
+        <!-- ===== 03 授权服务器 API ===== -->
+        <section class="docs-section" id="authserver">
+          <h2>授权服务器 API</h2>
+          <p class="lead">自托管授权服务器提供完整的密钥管理 API，兼容原始 Admin Panel 协议。</p>
+
+          <div class="callout">
+            <span class="callout-label">性能基准</span>
+            <p>Go 版本：约 15,000 req/s（P95: 10ms）</p>
+            <p>Python 版本：约 500 req/s（P95: 200ms）</p>
+          </div>
+
+          <div class="table-wrap">
+            <div class="t docs-t-api">
+              <div class="c h"><span class="k">端点</span></div>
+              <div class="c h"><span class="k">功能</span></div>
+              <div class="c h"><span class="k">参数</span></div>
+
+              <div class="c mono">POST /init_admin</div>
+              <div class="c">初始化管理员</div>
+              <div class="c mono">app, password</div>
+
+              <div class="c mono">POST /admin_login</div>
+              <div class="c">管理员登录</div>
+              <div class="c mono">app, password</div>
+
+              <div class="c mono">POST /admin</div>
+              <div class="c">管理命令</div>
+              <div class="c mono">app, password, command</div>
+
+              <div class="c mono">POST /login</div>
+              <div class="c">客户端授权验证</div>
+              <div class="c mono">app, key</div>
+            </div>
+          </div>
+
+          <h3>管理命令</h3>
+          <p>通过 <code class="inline-code">/admin</code> 端点传入 command 参数执行管理操作：</p>
+          <div class="cmd-list">
+            <div class="cmd-item">
+              <code class="cmd-pill">Key &lt;数量&gt; &lt;天数&gt;</code>
+              <span class="cmd-desc">生成密钥（1-50 个，1-9999 天）</span>
+            </div>
+            <div class="cmd-item">
+              <code class="cmd-pill">Ban &lt;密钥&gt;</code>
+              <span class="cmd-desc">封禁密钥</span>
+            </div>
+            <div class="cmd-item">
+              <code class="cmd-pill">Reset &lt;密钥&gt;</code>
+              <span class="cmd-desc">重置密钥</span>
+            </div>
+            <div class="cmd-item">
+              <code class="cmd-pill">LastLogin &lt;密钥&gt;</code>
+              <span class="cmd-desc">查询上次登录时间</span>
+            </div>
+          </div>
+
+          <p>生成 10 个 30 天有效期的密钥，并封禁指定密钥：</p>
+<pre class="code-block"><span class="lang-label">Bash</span><code>curl -X POST http://localhost:13337/admin \
+  -d "app=MyApp" \
+  -d "password=YourPassword" \
+  -d "command=Key 10 30"
+
+curl -X POST http://localhost:13337/admin \
+  -d "app=MyApp" \
+  -d "password=YourPassword" \
+  -d "command=Ban ABCD-1234-EFGH-5678"</code></pre>
+        </section>
+
+        <!-- ===== 04 部署指南 ===== -->
+        <section class="docs-section" id="deployment">
+          <h2>部署指南</h2>
+          <p class="lead">YCPPlus 授权服务器支持多种部署方式，推荐使用 Docker 进行生产环境部署。</p>
+
+          <h3>Docker 部署</h3>
+          <p>构建镜像并以守护态启动 Go 与 Python 实例：</p>
+<pre class="code-block"><span class="lang-label">Bash</span><code>docker-compose build
+docker-compose up -d ycp-auth-go
+docker-compose up -d ycp-auth-python
+docker-compose logs -f ycp-auth-go</code></pre>
+
+          <h3>手动部署</h3>
+          <p>Python 版本依赖 Flask，直接运行入口脚本：</p>
+<pre class="code-block"><span class="lang-label">Bash</span><code>cd server_python
+pip install -r requirements.txt
+python app.py</code></pre>
+          <p>Go 版本编译为单一二进制后运行：</p>
+<pre class="code-block"><span class="lang-label">Bash</span><code>cd server_go
+go build -o auth-server main.go
+./auth-server</code></pre>
+
+          <h3>Nginx 反向代理</h3>
+          <p>通过 Nginx 提供 HTTPS 终止与域名转发：</p>
+<pre class="code-block"><span class="lang-label">Nginx</span><code>server {
+    listen 443 ssl;
+    server_name auth.yourdomain.com;
+
+    ssl_certificate     /path/to/cert.pem;
+    ssl_certificate_key /path/to/key.pem;
+
+    location / {
+        proxy_pass http://127.0.0.1:13337;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}</code></pre>
+
+          <h3>测试</h3>
+          <p>运行 API 功能测试与 Locust 性能压测：</p>
+<pre class="code-block"><span class="lang-label">Bash</span><code>cd tests
+chmod +x test_api.sh
+./test_api.sh
+
+pip install locust
+locust -f tests/test_performance.py \
+  --host=http://localhost:13337</code></pre>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer" id="site-footer">
+    <div class="footer-inner">
+      <div class="footer-col footer-brand-col">
+        <div class="footer-brand">YCPPlus</div>
+        <p class="footer-desc">企业级 Java 代码混淆保护工具与自托管授权服务器。从字节码加密到 Native 转换，注解驱动的全链路代码安全方案。</p>
+      </div>
+      <div class="footer-col">
+        <div class="footer-label">资源</div>
+        <a href="docs.html" class="footer-link">文档</a>
+        <a href="https://github.com/NovolineGast/YCPPlus" target="_blank" rel="noopener" class="footer-link">GitHub 仓库</a>
+        <a href="docs.html#quickstart" class="footer-link">快速开始</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-label">技术栈</div>
+        <span class="footer-tech">Java · Gradle</span>
+        <span class="footer-tech">Python · Flask</span>
+        <span class="footer-tech">Go · Gin</span>
+        <span class="footer-tech">Docker · Nginx</span>
+      </div>
+      <div class="footer-col">
+        <div class="footer-label">许可证</div>
+        <span class="footer-tech">MIT License</span>
+        <span class="footer-tech">NovolineGast</span>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 YCPPlus. MIT 开源协议。</span>
+    </div>
+  </footer>
+
+  <button class="back-to-top" id="back-to-top" type="button" aria-label="返回顶部">
+    <i data-icon="arrowUp" aria-hidden="true"></i>
+  </button>
+
+  <script type="module" src="/src/js/main.js"></script>
+  <script type="module" src="/src/js/docs.js"></script>
+</body>
+</html>

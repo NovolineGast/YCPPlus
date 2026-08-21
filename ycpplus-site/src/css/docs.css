@@ -1,0 +1,235 @@
+/* ═══════════════════════════════════════════════════════════
+   docs.css — 文档页布局（面包屑 / 侧边栏 / 正文 / 表格 / 提示框）
+   ═══════════════════════════════════════════════════════════ */
+
+/* ===== 面包屑 ===== */
+.docs-breadcrumb {
+  border-bottom: 1px solid var(--border);
+  background: var(--background);
+  padding: 10px 22px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+.docs-breadcrumb .sep { margin: 0 8px; color: var(--background-400); }
+.docs-breadcrumb .current { color: var(--foreground); }
+
+/* ===== 布局 ===== */
+.docs-layout {
+  display: flex;
+  gap: 48px;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 32px 22px;
+}
+.docs-sidebar {
+  width: 220px;
+  flex: 0 0 220px;
+  position: sticky;
+  top: 76px;
+  align-self: flex-start;
+}
+.docs-nav { display: flex; flex-direction: column; gap: 4px; }
+.docs-nav a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  color: var(--muted-foreground);
+  text-decoration: none;
+  transition: background-color 0.18s ease, color 0.18s ease;
+}
+.docs-nav a:hover { background: var(--background-100); color: var(--foreground); }
+.docs-nav a:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+.docs-nav a.nav-active {
+  background: var(--background-200);
+  color: var(--foreground);
+  font-weight: 600;
+}
+.docs-nav .num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted-foreground);
+  min-width: 18px;
+}
+.docs-nav a.nav-active .num { color: var(--foreground); }
+
+/* ===== 正文 ===== */
+.docs-content { flex: 1; min-width: 0; max-width: 760px; }
+.docs-section { margin-bottom: 64px; scroll-margin-top: 88px; }
+.docs-section h2 {
+  font-size: clamp(26px, 3.5vw, 32px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin: 0 0 14px;
+  color: var(--foreground);
+}
+.docs-section h3 {
+  font-size: clamp(19px, 2.5vw, 22px);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  margin: 36px 0 12px;
+  color: var(--foreground);
+}
+.docs-section p {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--foreground);
+  margin: 0 0 16px;
+}
+.docs-section .lead { font-size: 16px; color: var(--muted-foreground); }
+
+/* ===== 代码块 ===== */
+.code-block {
+  background: var(--background-100);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-x: auto;
+  margin: 16px 0;
+  box-shadow: var(--shadow-xs);
+}
+.code-block code {
+  font-family: inherit;
+  color: inherit;
+  background: transparent;
+  padding: 0;
+  white-space: pre;
+}
+.code-block .lang-label {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted-foreground);
+}
+.code-block .tok-c { color: var(--muted-foreground); }
+.code-block .tok-a { color: var(--primary); }
+.code-block .tok-k { color: var(--brand-600); }
+
+.inline-code {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  background: var(--background-100);
+  padding: 2px 6px;
+  border-radius: var(--apple-radius-sm);
+  border: 1px solid var(--border);
+  color: var(--foreground);
+}
+
+/* ===== 提示框 ===== */
+.callout {
+  background: var(--background-100);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin: 16px 0;
+}
+.callout .callout-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted-foreground);
+  display: block;
+  margin-bottom: 8px;
+}
+.callout p {
+  margin: 4px 0;
+  color: var(--foreground);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ===== 命令说明 ===== */
+.cmd-list { display: flex; flex-direction: column; gap: 12px; margin: 16px 0; }
+.cmd-item { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.cmd-pill {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  background: var(--background-100);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 4px 12px;
+  white-space: nowrap;
+}
+.cmd-desc { color: var(--foreground); font-size: 14px; line-height: 1.5; }
+
+/* ===== 表格 ===== */
+.table-wrap { margin: 16px 0; }
+.t {
+  display: grid;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  color: var(--card-foreground);
+  box-shadow: var(--shadow-xs);
+}
+.t > .c {
+  padding: 10px 12px;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.t > .c:nth-child(3n) { border-right: 0; }
+.t > .c:nth-last-child(-n + 3) { border-bottom: 0; }
+.t > .c.h { background: var(--background-100); font-weight: 700; }
+.t > .c.h .k { display: block; font-size: 13px; line-height: 1.2; }
+.t.docs-t { grid-template-columns: 1.3fr 2fr 0.9fr; }
+.t.docs-t-api { grid-template-columns: 1.4fr 1.4fr 1.2fr; }
+.t > .c.mono {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--foreground);
+}
+.t > .c.level-adv { color: var(--primary); font-weight: 600; }
+
+/* ===== 响应式 ===== */
+@media (max-width: 900px) {
+  .docs-layout { gap: 28px; }
+  .docs-sidebar { width: 180px; flex-basis: 180px; }
+}
+
+@media (max-width: 768px) {
+  .docs-layout { flex-direction: column; gap: 24px; padding: 24px 16px; }
+  .docs-sidebar { width: 100%; flex-basis: auto; position: static; }
+  .docs-nav {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 8px;
+    padding-bottom: 4px;
+  }
+  .docs-nav a { white-space: nowrap; }
+  .docs-content { max-width: 100%; }
+  .docs-section { margin-bottom: 48px; }
+}
+
+@media (max-width: 640px) {
+  .table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .table-wrap .t { min-width: 560px; }
+}
+
+@media (max-width: 480px) {
+  .docs-breadcrumb { padding: 8px 14px; }
+  .code-block { padding: 16px; font-size: 12px; }
+  .callout { padding: 14px 16px; }
+}

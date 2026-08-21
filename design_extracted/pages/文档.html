@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文档</title>
+    <style id="theme-vars">
+/*
+ * Pinguo design tokens
+ * Brand: Pinguo
+ * Domain: Consumer imaging product
+ * Style: Restrained, elegant, Apple-inspired
+ * Theme mode: light-dark
+ * Source language: zh
+ * Output language: en
+ *
+ * Color architecture (two layers):
+ *   1. Primitive palette - six categories. brand / background / text / icon
+ *      are each a 10-step scale (50 lightest to 900 darkest). state-success and
+ *      state-error are functional colors anchored on Apple system colors.
+ *      Anchors follow Apple Human Interface Guidelines system colors
+ *      (System Blue #007AFF, System Green #34C759, System Red #FF3B30,
+ *      system grays / label / background colors).
+ *   2. Semantic tokens - :root (light) and .dark map roles onto primitives.
+ *      Components and UI kits must only consume the semantic tokens below.
+ */
+
+/* @group-priority: brand, background, text, icon, state-success, state-error */
+
+:root {
+  
+  /* solo-design consumption aliases: explicit prefix for fill-html-head.mjs */
+  --apple-background: var(--background, #ffffff);
+  --apple-foreground: var(--foreground, #0f172a);
+  --apple-card: var(--card, var(--background));
+  --apple-card-foreground: var(--card-foreground, var(--foreground));
+  --apple-popover: var(--popover, var(--card));
+  --apple-popover-foreground: var(--popover-foreground, var(--card-foreground, var(--foreground)));
+  --apple-primary: var(--primary, #111827);
+  --apple-primary-foreground: var(--primary-foreground, #ffffff);
+  --apple-secondary: var(--secondary, var(--muted, var(--card)));
+  --apple-secondary-foreground: var(--secondary-foreground, var(--foreground));
+  --apple-muted: var(--muted, var(--card));
+  --apple-muted-foreground: var(--muted-foreground, var(--foreground));
+  --apple-accent: var(--accent, var(--secondary, var(--muted, var(--card))));
+  --apple-accent-foreground: var(--accent-foreground, var(--foreground));
+  --apple-destructive: var(--destructive, #ef4444);
+  --apple-destructive-foreground: var(--destructive-foreground, #ffffff);
+  --apple-border: var(--border, currentColor);
+  --apple-input: var(--input, var(--border));
+  --apple-ring: var(--ring, var(--primary));
+  --apple-chart-1: var(--chart-1, var(--primary));
+  --apple-chart-2: var(--chart-2, var(--secondary, var(--primary)));
+  --apple-chart-3: var(--chart-3, var(--accent, var(--primary)));
+  --apple-chart-4: var(--chart-4, var(--muted-foreground, var(--foreground)));
+  --apple-chart-5: var(--chart-5, var(--foreground));
+  --apple-sidebar: var(--sidebar, var(--background));
+  --apple-sidebar-foreground: var(--sidebar-foreground, var(--foreground));
+  --apple-sidebar-primary: var(--sidebar-primary, var(--primary));
+  --apple-sidebar-primary-foreground: var(--sidebar-primary-foreground, var(--primary-foreground));
+  --apple-sidebar-accent: var(--sidebar-accent, var(--accent, var(--muted, var(--card))));
+  --apple-sidebar-accent-foreground: var(--sidebar-accent-foreground, var(--accent-foreground, var(--foreground)));
+
+/* ===== PRIMITIVE PALETTE ===== */
+
+  /* brand */
+  --brand-50: #e8f2ff;
+  --brand-100: #cfe5ff;
+  --brand-200: #9fcbff;
+  --brand-300: #66abff;
+  --brand-400: #2e8dff;
+  --brand-500: #007aff; /* @primary */
+  --brand-600: #0064d6;
+  --brand-700: #004fad;
+  --brand-800: #003b82;
+  --brand-900: #00275a;
+
+  /* background */
+  --background-50: #ffffff;
+  --background-100: #f7f7fa;
+  --background-200: #f2f2f7;
+  --background-300: #e5e5ea;
+  --background-400: #d1d1d6;
+  --background-500: #aeaeb2;
+  --background-600: #8e8e93;
+  --background-700: #3a3a3c;
+  --background-800: #1c1c1e;
+  --background-900: #000000;
+
+  /* text */
+  --text-50: #f5f5f7;
+  --text-100: #e3e3e8;
+  --text-200: #c7c7cc;
+  --text-300: #aeaeb2;
+  --text-400: #8e8e93;
+  --text-500: #6e6e73;
+  --text-600: #48484a;
+  --text-700: #3c3c43;
+  --text-800: #1d1d1f;
+  --text-900: #000000;
+
+  /* icon */
+  --icon-50: #f5f5f7;
+  --icon-100: #e5e5ea;
+  --icon-200: #d1d1d6;
+  --icon-300: #c7c7cc;
+  --icon-400: #aeaeb2;
+  --icon-500: #8e8e93;
+  --icon-600: #6e6e73;
+  --icon-700: #48484a;
+  --icon-800: #2c2c2e;
+  --icon-900: #1d1d1f;
+
+  /* state-success */
+  --state-success: #34c759; /* @primary */
+  --state-success-dark: #30d158;
+  --state-success-surface: #e9f9ee;
+  --state-success-foreground: #ffffff;
+
+  /* state-error */
+  --state-error: #ff3b30; /* @primary */
+  --state-error-dark: #ff453a;
+  --state-error-surface: #ffecea;
+  --state-error-foreground: #ffffff;
+
+  /* ===== SEMANTIC ROLES ===== */
+
+  /* semantic */
+  --background: var(--background-50);
+  --foreground: var(--text-800);
+  --card: var(--background-50);
+  --card-foreground: var(--text-800);
+  --popover: var(--background-50);
+  --popover-foreground: var(--text-900);
+
+  --primary: var(--brand-500);
+  --primary-foreground: var(--background-50);
+  --secondary: var(--background-200);
+  --secondary-foreground: var(--text-800);
+  --muted: var(--background-200);
+  --muted-foreground: var(--text-400);
+  --accent: var(--background-100);
+  --accent-foreground: var(--text-800);
+  --destructive: var(--state-error);
+  --destructive-foreground: var(--state-error-foreground);
+  --success: var(--state-success);
+  --success-foreground: var(--state-success-foreground);
+  --border: var(--background-300);
+  --input: var(--background-400);
+  --ring: var(--brand-500);
+
+  --icon: var(--icon-900);
+  --icon-muted: var(--icon-500);
+
+  /* chart */
+  --chart-1: var(--state-success);
+  --chart-2: var(--brand-500);
+  --chart-3: #ff9500;
+  --chart-4: #5856d6;
+  --chart-5: #af52de;
+
+  /* sidebar */
+  --sidebar: var(--background-200);
+  --sidebar-foreground: var(--text-800);
+  --sidebar-primary: var(--brand-500);
+  --sidebar-primary-foreground: var(--background-50);
+  --sidebar-accent: var(--background-300);
+  --sidebar-accent-foreground: var(--text-800);
+  --sidebar-border: var(--background-300);
+  --sidebar-ring: var(--brand-500);
+
+  /* TYPOGRAPHY */
+  --font-sans: DM Sans, ui-sans-serif, sans-serif, system-ui;
+  --font-serif: DM Sans, ui-sans-serif, sans-serif, system-ui;
+  --font-mono: JetBrains Mono, monospace;
+  --tracking-normal: 0em;
+
+  /* RADIUS */
+  --radius: 1.2rem;
+  --apple-radius-sm: 8px;
+  --apple-radius-md: 12px;
+  --apple-radius-lg: 19.2px;
+
+  /* SHADOWS */
+  --shadow-2xs: 0 1px 2px -1px rgba(0, 0, 0, 0.04); /* Hairline */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.04); /* Subtle */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05), 0 1px 3px -1px rgba(0, 0, 0, 0.05); /* Card */
+  --shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.05); /* Raised */
+  --shadow-md: 0 4px 8px -2px rgba(0, 0, 0, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.05); /* Card Hover */
+  --shadow-lg: 0 8px 24px -8px rgba(0, 0, 0, 0.08), 0 4px 8px -4px rgba(0, 0, 0, 0.05); /* Float */
+  --shadow-xl: 0 16px 40px -10px rgba(0, 0, 0, 0.10), 0 8px 16px -8px rgba(0, 0, 0, 0.06); /* Overlay */
+  --shadow-2xl: 0 24px 64px -12px rgba(0, 0, 0, 0.12); /* Modal */
+
+  /* SPACING */
+  --spacing: 0.24rem;
+}
+
+/* ===== SEMANTIC ROLES - dark (primitive palette inherited) ===== */
+.dark {
+  --background: var(--background-900);
+  --foreground: var(--text-50);
+  --card: var(--background-800);
+  --card-foreground: var(--text-50);
+  --popover: var(--background-700);
+  --popover-foreground: var(--text-50);
+
+  --primary: var(--brand-400);
+  --primary-foreground: var(--background-900);
+  --secondary: var(--background-800);
+  --secondary-foreground: var(--text-50);
+  --muted: var(--background-800);
+  --muted-foreground: var(--text-400);
+  --accent: var(--background-700);
+  --accent-foreground: var(--text-50);
+  --destructive: var(--state-error-dark);
+  --destructive-foreground: var(--state-error-foreground);
+  --success: var(--state-success-dark);
+  --success-foreground: var(--state-success-foreground);
+  --border: var(--background-700);
+  --input: var(--background-700);
+  --ring: var(--brand-400);
+
+  --icon: var(--icon-50);
+  --icon-muted: var(--icon-500);
+
+  --chart-1: var(--state-success-dark);
+  --chart-2: var(--brand-400);
+  --chart-3: #ff9f0a;
+  --chart-4: #5e5ce6;
+  --chart-5: #bf5af2;
+
+  --sidebar: var(--background-800);
+  --sidebar-foreground: var(--text-50);
+  --sidebar-primary: var(--brand-400);
+  --sidebar-primary-foreground: var(--background-900);
+  --sidebar-accent: var(--background-700);
+  --sidebar-accent-foreground: var(--text-50);
+  --sidebar-border: var(--background-700);
+  --sidebar-ring: var(--brand-400);
+
+  --shadow-2xs: 0 1px 2px -1px rgba(0, 0, 0, 0.30);
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.30);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.36), 0 1px 3px -1px rgba(0, 0, 0, 0.36);
+  --shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.40), 0 1px 2px -1px rgba(0, 0, 0, 0.36);
+  --shadow-md: 0 4px 8px -2px rgba(0, 0, 0, 0.44), 0 2px 4px -2px rgba(0, 0, 0, 0.36);
+  --shadow-lg: 0 8px 24px -8px rgba(0, 0, 0, 0.50), 0 4px 8px -4px rgba(0, 0, 0, 0.40);
+  --shadow-xl: 0 16px 40px -10px rgba(0, 0, 0, 0.55), 0 8px 16px -8px rgba(0, 0, 0, 0.44);
+  --shadow-2xl: 0 24px 64px -12px rgba(0, 0, 0, 0.60);
+}
+
+    </style>
+    <style id="component-vars">
+/* ═══════════════════════════════════════════════════════════════
+   components.css — Design System Component Definitions
+   Auto-extracted from preview/component-*.html
+   DO NOT EDIT MANUALLY — regenerate via extract-components-css.mjs
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Button ────────────────────────────────────────────────── */
+/* @anatomy
+   <div class="row"><span class="label">Primary 56</span><button class="btn btn-primary btn-lg">Buy now</button><button class="btn btn-primary btn-lg" disabled>Buy now</button></div>
+   <hr class="divider">
+   <div class="row"><span class="label">Secondary 48</span><button class="btn btn-secondary">Shop the latest</button><button class="btn btn-secondary" disabled>Shop the latest</button></div>
+   <div class="row"><span class="label">Text 48</span><button class="btn btn-text">Learn more ›</button><button class="btn btn-text" disabled>Learn more ›</button></div>
+*/
+body{margin:0;padding:12px;background:var(--background);color:var(--foreground);font-family:var(--font-sans);letter-spacing:var(--tracking-normal)}.row{display:flex;align-items:center;gap:calc(var(--spacing)*3);flex-wrap:wrap;margin:0 0 calc(var(--spacing)*3)}.label{min-width:72px;color:var(--muted-foreground);font:600 10px/1 var(--font-mono);letter-spacing:.12em;text-transform:uppercase}.btn{display:inline-flex;align-items:center;justify-content:center;gap:calc(var(--spacing)*1.5);height:40px;padding:0 20px;border:none;border-radius:calc(var(--radius)*2);background:transparent;color:var(--foreground);font:600 14px/1 var(--font-sans);letter-spacing:var(--tracking-normal);white-space:nowrap;box-shadow:var(--shadow-sm);cursor:pointer;transition:background-color .18s ease,color .18s ease,opacity .18s ease,filter .18s ease}.btn:focus-visible{outline:2px solid var(--ring);outline-offset:2px}.btn:disabled{opacity:.42;cursor:not-allowed}.btn-primary{background:var(--primary);color:var(--primary-foreground)}.btn-primary:hover{filter:brightness(.96)}.btn-secondary{height:48px;padding:0 24px;background:var(--secondary);color:var(--secondary-foreground)}.btn-secondary:hover{background:var(--muted)}.btn-text{height:48px;padding:0 4px;box-shadow:none}.btn-text:hover{color:var(--primary)}.btn-lg{height:56px;padding:0 28px;font-size:16px}.divider{border:0;border-top:1px solid var(--border);margin:calc(var(--spacing)*4) 0}
+
+/* ── Card ──────────────────────────────────────────────────── */
+/* @anatomy
+   <div class="row">
+   <span class="label">Info</span>
+   <article class="card">
+   <div><div class="eyebrow">Pinguo Apple</div><h1 class="title">Built for creators</h1><p class="body-copy">A calm surface for comparing cameras, storage tiers, and bundle benefits across the ecosystem.</p></div>
+   <a class="cta" href="#">Compare models</a>
+   </article>
+   <article class="card disabled" aria-disabled="true">
+   <div><div class="eyebrow">Campus Store</div><h1 class="title">Education pricing</h1><p class="body-copy">Student bundles stay visible while unavailable purchase actions remain clearly disabled.</p></div>
+   <span class="cta">Compare models</span>
+   </article>
+   </div>
+   <hr class="divider">
+   <div class="row">
+   <span class="label">Media</span>
+   <article class="card media-card">
+   <div class="media"></div>
+   <div><div class="meta">Creator bundle</div><h1 class="title">Studio kit with Lens Sync</h1><div class="price">From $799 with Education pricing</div></div>
+   </article>
+   <article class="card media-card dark">
+   <div class="media"></div>
+   <div><div class="meta">Consumer imaging ecosystem</div><h1 class="title">Built for creators</h1><div class="price">Compare models across camera, app, and cloud plans</div></div>
+   </article>
+   </div>
+*/
+body{margin:0;padding:12px;background:var(--background);color:var(--foreground);font:500 14px/1.45 var(--font-sans);letter-spacing:var(--tracking-normal)}.row{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap}.label{width:72px;padding-top:10px;color:var(--muted-foreground);font:700 10px/1 var(--font-sans);letter-spacing:.12em;text-transform:uppercase}.divider{margin:12px 0;border:0;border-top:1px solid var(--border)}.card{width:188px;min-height:148px;padding:calc(var(--spacing)*5);display:flex;flex-direction:column;justify-content:space-between;background:var(--card);color:var(--card-foreground);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-md);transition:transform .18s ease,box-shadow .18s ease}.card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}.card.disabled,.card.disabled:hover{opacity:.5;transform:none;box-shadow:var(--shadow-md)}.eyebrow,.meta{color:var(--muted-foreground);font-size:11px;letter-spacing:.08em;text-transform:uppercase}.title{margin:6px 0 8px;font-size:18px;line-height:1.15}.body-copy{margin:0;color:var(--muted-foreground);font-size:13px}.cta{display:inline-flex;align-items:center;justify-content:center;width:max-content;margin-top:12px;padding:calc(var(--spacing)*2) calc(var(--spacing)*3.5);border-radius:999px;background:var(--primary);color:var(--primary-foreground);font-size:12px;font-weight:700;text-decoration:none}.media{aspect-ratio:4/3;border-radius:calc(var(--radius) - 4px);background:linear-gradient(135deg,var(--secondary),var(--accent));border:1px solid var(--border)}.media-card{min-height:212px;padding:calc(var(--spacing)*4)}.media-card .title{font-size:16px;margin:10px 0 6px}.price{font-size:12px;color:var(--muted-foreground)}.dark{background:var(--card);color:var(--card-foreground)}
+
+/* ── Comparison Table ──────────────────────────────────────── */
+/* @anatomy
+   <div class="row"><span class="label">Default</span><div class="t"><div class="c m">Compare models</div><div class="c h"><span class="k">Mini</span><span class="s">Pinguo Apple</span></div><div class="c h"><span class="k">Air</span><span class="s">Popular</span></div><div class="c h b"><span class="k">Pro</span><span class="s">Creator</span></div><div class="c m">Battery life</div><div class="c v">12h</div><div class="c v">16h</div><div class="c v">20h</div><div class="c m">Storage</div><div class="c v">256GB</div><div class="c v">512GB</div><div class="c v">1TB</div><div class="c m">Camera system</div><div class="c n">Dual</div><div class="c n">48MP</div><div class="c n">48MP+T</div></div><div class="t x" aria-disabled="true"><div class="c m">Compare models</div><div class="c h"><span class="k">Mini</span><span class="s">Pinguo Apple</span></div><div class="c h"><span class="k">Air</span><span class="s">Popular</span></div><div class="c h b"><span class="k">Pro</span><span class="s">Creator</span></div><div class="c m">Battery life</div><div class="c v">12h</div><div class="c v">16h</div><div class="c v">20h</div><div class="c m">Storage</div><div class="c v">256GB</div><div class="c v">512GB</div><div class="c v">1TB</div><div class="c m">Camera system</div><div class="c n">Dual</div><div class="c n">48MP</div><div class="c n">48MP+T</div></div></div>
+   <hr class="divider">
+   <div class="row"><span class="label">Compact</span><div class="t q dark"><div class="c m">Compare models</div><div class="c h"><span class="k">Mini</span></div><div class="c h"><span class="k">Air</span></div><div class="c h b"><span class="k">Pro</span></div><div class="c h"><span class="k">Ultra</span></div><div class="c m">Battery life</div><div class="c v">12h</div><div class="c v">16h</div><div class="c v">20h</div><div class="c v">24h</div><div class="c m">Storage</div><div class="c v">256GB</div><div class="c v">512GB</div><div class="c v">1TB</div><div class="c v">2TB</div><div class="c m">Camera system</div><div class="c n">Dual</div><div class="c n">48MP</div><div class="c n">48MP+T</div><div class="c n">Triple</div></div></div>
+*/
+body{margin:0;padding:12px;background:var(--background);color:var(--foreground);font:500 13px/1.4 var(--font-sans);letter-spacing:var(--tracking-normal)}.row{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:8px}.label{width:72px;padding-top:10px;color:var(--muted-foreground);font:700 10px/1 var(--font-mono);letter-spacing:.12em;text-transform:uppercase}.divider{margin:12px 0;border:0;border-top:1px solid var(--border)}.t{display:grid;grid-template-columns:96px repeat(3,1fr);overflow:hidden;border:1px solid var(--border);border-radius:var(--radius);background:var(--card);color:var(--card-foreground);box-shadow:var(--shadow-sm)}.q{grid-template-columns:82px repeat(4,1fr)}.c{padding:10px;border-right:1px solid var(--border);border-bottom:1px solid var(--border)}.t>.c:nth-child(4n),.q>.c:nth-child(5n){border-right:0}.t>.c:nth-last-child(-n+4),.q>.c:nth-last-child(-n+5){border-bottom:0}.m{background:var(--background);color:var(--muted-foreground);font:700 10px/1 var(--font-mono);letter-spacing:.12em;text-transform:uppercase}.h{background:var(--background);font-weight:700}.k{display:block;font-size:14px;line-height:1.1}.s{display:block;margin-top:4px;color:var(--chart-2);font-size:11px;font-weight:700}.b .k{color:var(--chart-2)}.v{font-weight:600}.n{color:var(--muted-foreground);font-size:12px}.x{opacity:.45}
+
+/* ── Input ─────────────────────────────────────────────────── */
+/* @anatomy
+   <div class="row">
+   <span class="label">Search 44</span>
+   <div class="field">
+   <span class="icon">⌕</span>
+   <input class="control" aria-label="Search products" placeholder="Search products">
+   <button class="clear" type="button" aria-label="Clear search">×</button>
+   </div>
+   <div class="field disabled">
+   <span class="icon">⌕</span>
+   <input class="control" aria-label="Search products disabled" placeholder="Search products" disabled>
+   <button class="clear" type="button" aria-label="Clear search disabled" disabled>×</button>
+   </div>
+   </div>
+   <hr class="divider">
+   <div class="row">
+   <span class="label">Dark 40</span>
+   <div class="surface dark">
+   <div class="field small">
+   <input class="control" aria-label="Email address" placeholder="Email address">
+   </div>
+   </div>
+   <div class="surface dark">
+   <div class="field small disabled">
+   <input class="control" aria-label="Track your order disabled" placeholder="Track your order" disabled>
+   </div>
+   </div>
+   </div>
+*/
+body{margin:0;padding:12px;background:var(--background);color:var(--foreground);font:500 13px/1.4 var(--font-sans)}.row{display:flex;align-items:center;gap:calc(var(--spacing)*3);flex-wrap:wrap;margin-bottom:8px}.label{min-width:58px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted-foreground)}.divider{border:0;border-top:1px solid var(--border);margin:10px 0}.surface{display:flex;gap:calc(var(--spacing)*2);padding:calc(var(--spacing)*3);border:1px solid var(--border);border-radius:var(--radius);background:var(--card);box-shadow:var(--shadow-sm)}.dark{background:var(--background);color:var(--foreground)}.field{display:flex;align-items:center;gap:calc(var(--spacing)*2);min-width:240px;height:44px;padding:0 calc(var(--spacing)*3);border:1px solid var(--input);border-radius:var(--radius);background:var(--background);color:var(--foreground);box-shadow:var(--shadow-xs)}.field.small{height:40px}.field:focus-within{border-color:var(--ring);box-shadow:0 0 0 1px var(--ring)}.field.disabled{opacity:.55}.icon,.clear{padding:0;border:0;background:transparent;color:var(--icon-muted);font:inherit}.icon{font-size:13px}.control{flex:1;border:0;outline:0;background:transparent;color:inherit;font:inherit}.control::placeholder{color:var(--muted-foreground)}
+
+/* ── Navigation ────────────────────────────────────────────── */
+/* @anatomy
+   <div class="row"><span class="label">Global 44</span><nav class="webbar dark" aria-label="Pinguo Apple global navigation"><span class="brand">Pinguo Apple</span><div class="rail"><a class="link" href="#">Store</a><a class="link" href="#">Explore</a><a class="link" href="#">Community</a><a class="link" href="#">Support</a></div></nav><nav class="webbar dark disabled" aria-label="Pinguo Apple global navigation disabled"><span class="brand">Pinguo Apple</span><div class="rail"><span class="link">Store</span><span class="link">Explore</span><span class="link">Community</span><span class="link">Support</span></div></nav></div>
+   <hr class="divider">
+   <div class="row"><span class="label">Tab Bar</span><div class="mobile"><div class="screen"><nav class="tabbar" aria-label="Pinguo Apple tab bar"><a class="tab" href="#"><span class="dot"></span><span>Store</span></a><a class="tab" href="#"><span class="dot"></span><span>Explore</span></a><a class="tab" href="#"><span class="dot"></span><span>Community</span></a><a class="tab" href="#"><span class="dot"></span><span>Support</span></a></nav></div></div><div class="mobile disabled"><div class="screen"><nav class="tabbar" aria-label="Pinguo Apple tab bar disabled"><span class="tab"><span class="dot"></span><span>Store</span></span><span class="tab"><span class="dot"></span><span>Explore</span></span><span class="tab"><span class="dot"></span><span>Community</span></span><span class="tab"><span class="dot"></span><span>Support</span></span></nav></div></div></div>
+*/
+body{margin:0;padding:12px;background:var(--background);color:var(--foreground);font:500 13px/1.4 var(--font-sans);letter-spacing:var(--tracking-normal)}.row{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:8px}.label{width:72px;padding-top:10px;color:var(--muted-foreground);font:700 10px/1 var(--font-mono);letter-spacing:.12em;text-transform:uppercase}.divider{margin:12px 0;border:0;border-top:1px solid var(--border)}.webbar,.mobile{border:1px solid var(--border);box-shadow:var(--shadow-sm)}.webbar{display:flex;align-items:center;gap:calc(var(--spacing)*2);min-width:320px;height:44px;padding:0 calc(var(--spacing)*3);border-radius:var(--radius);background:var(--sidebar)}.brand{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}.rail{display:flex;gap:calc(var(--spacing)*1.5);margin-left:auto}.link,.tab{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;color:inherit;text-decoration:none;white-space:nowrap;transition:background-color .18s ease,color .18s ease,opacity .18s ease}.link{height:32px;padding:0 calc(var(--spacing)*2.5)}.link:hover,.tab:hover{background:var(--secondary)}.link:focus-visible,.tab:focus-visible{outline:2px solid var(--ring);outline-offset:2px}.dark{background:var(--sidebar);color:var(--foreground)}.disabled{opacity:.48}.disabled .link,.disabled .tab{pointer-events:none}.mobile{padding:calc(var(--spacing)*2);border-radius:calc(var(--radius)*1.1);background:var(--card)}.screen{display:flex;align-items:flex-end;justify-content:center;width:188px;height:164px;padding:calc(var(--spacing)*3);border-radius:calc(var(--radius)*.9);background:linear-gradient(180deg,var(--background),var(--secondary))}.tabbar{display:flex;gap:calc(var(--spacing)*1.5);padding:calc(var(--spacing)*1.5);border:1px solid var(--border);border-radius:999px;background:var(--card);box-shadow:var(--shadow-md)}.tab{flex-direction:column;gap:2px;min-width:56px;height:56px;padding:0 calc(var(--spacing)*1.5);font-size:11px;text-align:center}.dot{width:18px;height:18px;border-radius:999px;background:var(--secondary);box-shadow:inset 0 0 0 1px var(--border)}.tab:hover .dot{background:var(--primary)}
+
+/* ── Product Grid ──────────────────────────────────────────── */
+/* @anatomy
+   <div class="row">
+   <span class="label">4-up</span>
+   <div class="grid grid-4">
+   <article class="card"><div class="media"></div><span class="eyebrow">New this season</span><strong class="title">Pinguo Lens Pro</strong><span class="price">From $999</span><a class="cta" href="/">Compare all models</a></article>
+   <article class="card"><div class="media"></div><span class="eyebrow">Creator kit</span><strong class="title">Pinguo Air Cam</strong><span class="price">From $749</span><a class="cta" href="/">Build your setup</a></article>
+   <article class="card"><div class="media"></div><span class="eyebrow">Studio ready</span><strong class="title">Pinguo Dock One</strong><span class="price">From $299</span><a class="cta" href="/">See accessories</a></article>
+   <article class="card is-disabled"><div class="media"></div><span class="eyebrow">Coming soon</span><strong class="title">Pinguo Vision Mini</strong><span class="price muted">Notify me</span><span class="cta">Unavailable</span></article>
+   </div>
+   </div>
+   <hr class="divider">
+   <div class="row">
+   <span class="label">Story</span>
+   <div class="grid grid-2">
+   <article class="card story"><div class="media"></div><span class="eyebrow">Consumer imaging product ecosystem</span><strong class="title">Travel light with one camera, one dock, and one cloud-ready edit flow.</strong><span class="price muted">Pinguo Apple picks for weekend shoots</span><a class="cta" href="/">Shop the story</a></article>
+   <article class="card story"><div class="media"></div><span class="eyebrow">Compare lineup</span><strong class="title">Choose between compact capture, pro optics, and desktop-grade finishing tools.</strong><span class="price muted">Made for photo-first households</span><a class="cta" href="/">Compare all models</a></article>
+   </div>
+   </div>
+*/
+body{margin:0;padding:12px;background:var(--background);color:var(--foreground);font:500 14px/1.4 var(--font-sans)}.row{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px}.label{width:72px;padding-top:6px;color:var(--muted-foreground);font-size:10px;letter-spacing:.12em;text-transform:uppercase;flex:0 0 auto}.grid{display:grid;gap:8px;flex:1}.grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}.grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}.card{display:flex;flex-direction:column;gap:8px;padding:10px;border:1px solid var(--border);border-radius:var(--radius);background:var(--card);color:var(--card-foreground);box-shadow:var(--shadow-xs);transition:border-color .2s ease,transform .2s ease}.card:hover{border-color:var(--primary);transform:translateY(-1px)}.media{aspect-ratio:1;border-radius:calc(var(--radius) - 4px);background:linear-gradient(135deg,var(--secondary),var(--background));border:1px solid var(--border)}.story .media{aspect-ratio:1.25;background:linear-gradient(135deg,var(--foreground),var(--secondary))}.eyebrow{color:var(--muted-foreground);font-size:10px;letter-spacing:.08em;text-transform:uppercase}.title{font-size:15px;line-height:1.25}.price{font-variant-numeric:tabular-nums}.cta{display:inline-flex;align-self:flex-start;padding:7px 10px;border-radius:999px;background:var(--primary);color:var(--primary-foreground);font-size:12px;text-decoration:none}.muted{color:var(--muted-foreground)}.is-disabled{opacity:.55}.divider{margin:10px 0;border:0;border-top:1px solid var(--border)}
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--apple-background);
+    --color-foreground: var(--apple-foreground);
+    --color-card: var(--apple-card);
+    --color-card-foreground: var(--apple-card-foreground);
+    --color-popover: var(--apple-popover);
+    --color-popover-foreground: var(--apple-popover-foreground);
+    --color-primary: var(--apple-primary);
+    --color-primary-foreground: var(--apple-primary-foreground);
+    --color-secondary: var(--apple-secondary);
+    --color-secondary-foreground: var(--apple-secondary-foreground);
+    --color-muted: var(--apple-muted);
+    --color-muted-foreground: var(--apple-muted-foreground);
+    --color-accent: var(--apple-accent);
+    --color-accent-foreground: var(--apple-accent-foreground);
+    --color-destructive: var(--apple-destructive);
+    --color-destructive-foreground: var(--apple-destructive-foreground);
+    --color-border: var(--apple-border);
+    --color-input: var(--apple-input);
+    --color-ring: var(--apple-ring);
+    --color-chart-1: var(--apple-chart-1);
+    --color-chart-2: var(--apple-chart-2);
+    --color-chart-3: var(--apple-chart-3);
+    --color-chart-4: var(--apple-chart-4);
+    --color-chart-5: var(--apple-chart-5);
+    --color-sidebar: var(--apple-sidebar);
+    --color-sidebar-foreground: var(--apple-sidebar-foreground);
+    --color-sidebar-primary: var(--apple-sidebar-primary);
+    --color-sidebar-primary-foreground: var(--apple-sidebar-primary-foreground);
+    --color-sidebar-accent: var(--apple-sidebar-accent);
+    --color-sidebar-accent-foreground: var(--apple-sidebar-accent-foreground);
+    --radius-sm: var(--apple-radius-sm);
+    --radius-md: var(--apple-radius-md);
+    --radius-lg: var(--apple-radius-lg);
+  }
+  @layer base {
+    body { background: var(--apple-background); color: var(--apple-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--apple-background); }
+      .text-background { color: var(--apple-background); }
+      .border-background { border-color: var(--apple-background); }
+      .ring-background { --tw-ring-color: var(--apple-background); }
+      .bg-foreground { background-color: var(--apple-foreground); }
+      .text-foreground { color: var(--apple-foreground); }
+      .border-foreground { border-color: var(--apple-foreground); }
+      .ring-foreground { --tw-ring-color: var(--apple-foreground); }
+      .bg-card { background-color: var(--apple-card); }
+      .text-card { color: var(--apple-card); }
+      .border-card { border-color: var(--apple-card); }
+      .ring-card { --tw-ring-color: var(--apple-card); }
+      .bg-card-foreground { background-color: var(--apple-card-foreground); }
+      .text-card-foreground { color: var(--apple-card-foreground); }
+      .border-card-foreground { border-color: var(--apple-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--apple-card-foreground); }
+      .bg-popover { background-color: var(--apple-popover); }
+      .text-popover { color: var(--apple-popover); }
+      .border-popover { border-color: var(--apple-popover); }
+      .ring-popover { --tw-ring-color: var(--apple-popover); }
+      .bg-popover-foreground { background-color: var(--apple-popover-foreground); }
+      .text-popover-foreground { color: var(--apple-popover-foreground); }
+      .border-popover-foreground { border-color: var(--apple-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--apple-popover-foreground); }
+      .bg-primary { background-color: var(--apple-primary); }
+      .text-primary { color: var(--apple-primary); }
+      .border-primary { border-color: var(--apple-primary); }
+      .ring-primary { --tw-ring-color: var(--apple-primary); }
+      .bg-primary-foreground { background-color: var(--apple-primary-foreground); }
+      .text-primary-foreground { color: var(--apple-primary-foreground); }
+      .border-primary-foreground { border-color: var(--apple-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--apple-primary-foreground); }
+      .bg-secondary { background-color: var(--apple-secondary); }
+      .text-secondary { color: var(--apple-secondary); }
+      .border-secondary { border-color: var(--apple-secondary); }
+      .ring-secondary { --tw-ring-color: var(--apple-secondary); }
+      .bg-secondary-foreground { background-color: var(--apple-secondary-foreground); }
+      .text-secondary-foreground { color: var(--apple-secondary-foreground); }
+      .border-secondary-foreground { border-color: var(--apple-secondary-foreground); }
+      .ring-secondary-foreground { --tw-ring-color: var(--apple-secondary-foreground); }
+      .bg-muted { background-color: var(--apple-muted); }
+      .text-muted { color: var(--apple-muted); }
+      .border-muted { border-color: var(--apple-muted); }
+      .ring-muted { --tw-ring-color: var(--apple-muted); }
+      .bg-muted-foreground { background-color: var(--apple-muted-foreground); }
+      .text-muted-foreground { color: var(--apple-muted-foreground); }
+      .border-muted-foreground { border-color: var(--apple-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--apple-muted-foreground); }
+      .bg-accent { background-color: var(--apple-accent); }
+      .text-accent { color: var(--apple-accent); }
+      .border-accent { border-color: var(--apple-accent); }
+      .ring-accent { --tw-ring-color: var(--apple-accent); }
+      .bg-accent-foreground { background-color: var(--apple-accent-foreground); }
+      .text-accent-foreground { color: var(--apple-accent-foreground); }
+      .border-accent-foreground { border-color: var(--apple-accent-foreground); }
+      .ring-accent-foreground { --tw-ring-color: var(--apple-accent-foreground); }
+      .bg-destructive { background-color: var(--apple-destructive); }
+      .text-destructive { color: var(--apple-destructive); }
+      .border-destructive { border-color: var(--apple-destructive); }
+      .ring-destructive { --tw-ring-color: var(--apple-destructive); }
+      .bg-destructive-foreground { background-color: var(--apple-destructive-foreground); }
+      .text-destructive-foreground { color: var(--apple-destructive-foreground); }
+      .border-destructive-foreground { border-color: var(--apple-destructive-foreground); }
+      .ring-destructive-foreground { --tw-ring-color: var(--apple-destructive-foreground); }
+      .bg-border { background-color: var(--apple-border); }
+      .text-border { color: var(--apple-border); }
+      .border-border { border-color: var(--apple-border); }
+      .ring-border { --tw-ring-color: var(--apple-border); }
+      .bg-input { background-color: var(--apple-input); }
+      .text-input { color: var(--apple-input); }
+      .border-input { border-color: var(--apple-input); }
+      .ring-input { --tw-ring-color: var(--apple-input); }
+      .bg-ring { background-color: var(--apple-ring); }
+      .text-ring { color: var(--apple-ring); }
+      .border-ring { border-color: var(--apple-ring); }
+      .ring-ring { --tw-ring-color: var(--apple-ring); }
+      .bg-chart-1 { background-color: var(--apple-chart-1); }
+      .text-chart-1 { color: var(--apple-chart-1); }
+      .border-chart-1 { border-color: var(--apple-chart-1); }
+      .ring-chart-1 { --tw-ring-color: var(--apple-chart-1); }
+      .bg-chart-2 { background-color: var(--apple-chart-2); }
+      .text-chart-2 { color: var(--apple-chart-2); }
+      .border-chart-2 { border-color: var(--apple-chart-2); }
+      .ring-chart-2 { --tw-ring-color: var(--apple-chart-2); }
+      .bg-chart-3 { background-color: var(--apple-chart-3); }
+      .text-chart-3 { color: var(--apple-chart-3); }
+      .border-chart-3 { border-color: var(--apple-chart-3); }
+      .ring-chart-3 { --tw-ring-color: var(--apple-chart-3); }
+      .bg-chart-4 { background-color: var(--apple-chart-4); }
+      .text-chart-4 { color: var(--apple-chart-4); }
+      .border-chart-4 { border-color: var(--apple-chart-4); }
+      .ring-chart-4 { --tw-ring-color: var(--apple-chart-4); }
+      .bg-chart-5 { background-color: var(--apple-chart-5); }
+      .text-chart-5 { color: var(--apple-chart-5); }
+      .border-chart-5 { border-color: var(--apple-chart-5); }
+      .ring-chart-5 { --tw-ring-color: var(--apple-chart-5); }
+      .bg-sidebar { background-color: var(--apple-sidebar); }
+      .text-sidebar { color: var(--apple-sidebar); }
+      .border-sidebar { border-color: var(--apple-sidebar); }
+      .ring-sidebar { --tw-ring-color: var(--apple-sidebar); }
+      .bg-sidebar-foreground { background-color: var(--apple-sidebar-foreground); }
+      .text-sidebar-foreground { color: var(--apple-sidebar-foreground); }
+      .border-sidebar-foreground { border-color: var(--apple-sidebar-foreground); }
+      .ring-sidebar-foreground { --tw-ring-color: var(--apple-sidebar-foreground); }
+      .bg-sidebar-primary { background-color: var(--apple-sidebar-primary); }
+      .text-sidebar-primary { color: var(--apple-sidebar-primary); }
+      .border-sidebar-primary { border-color: var(--apple-sidebar-primary); }
+      .ring-sidebar-primary { --tw-ring-color: var(--apple-sidebar-primary); }
+      .bg-sidebar-primary-foreground { background-color: var(--apple-sidebar-primary-foreground); }
+      .text-sidebar-primary-foreground { color: var(--apple-sidebar-primary-foreground); }
+      .border-sidebar-primary-foreground { border-color: var(--apple-sidebar-primary-foreground); }
+      .ring-sidebar-primary-foreground { --tw-ring-color: var(--apple-sidebar-primary-foreground); }
+      .bg-sidebar-accent { background-color: var(--apple-sidebar-accent); }
+      .text-sidebar-accent { color: var(--apple-sidebar-accent); }
+      .border-sidebar-accent { border-color: var(--apple-sidebar-accent); }
+      .ring-sidebar-accent { --tw-ring-color: var(--apple-sidebar-accent); }
+      .bg-sidebar-accent-foreground { background-color: var(--apple-sidebar-accent-foreground); }
+      .text-sidebar-accent-foreground { color: var(--apple-sidebar-accent-foreground); }
+      .border-sidebar-accent-foreground { border-color: var(--apple-sidebar-accent-foreground); }
+      .ring-sidebar-accent-foreground { --tw-ring-color: var(--apple-sidebar-accent-foreground); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+  <!-- ============ SHARED HEADER (paths fixed for pages/) ============ -->
+  <header class="site-header" id="site-header">
+    <nav class="webbar" aria-label="YCPPlus global navigation">
+      <a href="index.html" class="brand" id="nav-home" data-dom-id="nav-home">YCPPlus</a>
+      <div class="rail">
+        <a href="index.html" class="link nav-link" id="nav-home-link">首页</a>
+        <a href="docs.html" class="link nav-link active" id="nav-docs" data-dom-id="nav-docs">文档</a>
+        <a href="https://github.com/NovolineGast/YCPPlus" target="_blank" rel="noopener" class="link nav-link">GitHub</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Breadcrumb bar -->
+    <div class="docs-breadcrumb">
+      <span class="crumb">文档</span>
+      <span class="sep">/</span>
+      <span class="crumb current" id="breadcrumb-current">快速开始</span>
+    </div>
+
+    <div class="docs-layout">
+      <!-- Sticky sidebar -->
+      <aside class="docs-sidebar">
+        <nav class="docs-nav" aria-label="文档目录">
+          <a href="#quickstart"><span class="num">01</span>快速开始</a>
+          <a href="#annotations"><span class="num">02</span>混淆注解参考</a>
+          <a href="#authserver"><span class="num">03</span>授权服务器 API</a>
+          <a href="#deployment"><span class="num">04</span>部署指南</a>
+        </nav>
+      </aside>
+
+      <!-- Flowing content -->
+      <div class="docs-content">
+        <!-- ===== Section 1: 快速开始 ===== -->
+        <section class="docs-section" id="quickstart">
+          <h2>快速开始</h2>
+          <p class="lead">YCPPlus 提供两种核心功能：代码混淆保护和自托管授权服务器。以下是快速上手指南。</p>
+
+          <h3>使用混淆器</h3>
+          <p>在 Java 源码中通过注解标记需要保护的方法与字段，随后使用混淆器构建受保护的产物。</p>
+<pre class="code-block"><span class="lang-label">Java</span><code><span class="tok-k">import</span> com.yumegod.yumecloudprotection.annotations.*;
+
+<span class="tok-k">public class</span> MyApp {
+    <span class="tok-a">@StringObfuscate</span>
+    <span class="tok-k">private static final</span> String API_KEY = "secret_key_123";
+
+    <span class="tok-a">@NumberObfuscate</span>
+    <span class="tok-k">private static final int</span> MAX_USERS = 1000;
+
+    <span class="tok-a">@FlowObfuscate</span>
+    <span class="tok-k">public void</span> criticalMethod() {
+        <span class="tok-c">// 核心业务逻辑</span>
+    }
+
+    <span class="tok-a">@Native</span>
+    <span class="tok-a">@VMProtectUltra</span>
+    <span class="tok-k">public</span> String validateLicense(String key) {
+        <span class="tok-c">// 授权验证逻辑</span>
+    }
+}</code></pre>
+          <p>使用 Gradle 构建混淆器并处理目标 Jar：</p>
+<pre class="code-block"><span class="lang-label">Bash</span><code>cd obfuscator
+gradle shadowJar
+java -jar build/libs/obfuscator-1.2.jar \
+  --input YourApp.jar \
+  --output YourApp-obfuscated.jar</code></pre>
+          <p>或启动图形界面进行交互式配置：</p>
+<pre class="code-block"><span class="lang-label">Bash</span><code>cd obfuscatorgui
+gradle shadowJar
+java -jar build/libs/obfuscatorgui-1.2.jar</code></pre>
+
+          <h3>部署授权服务器</h3>
+          <p>使用 Docker Compose 一键启动授权服务，并完成管理员初始化：</p>
+<pre class="code-block"><span class="lang-label">Bash</span><code>docker-compose up -d ycp-auth-python
+docker-compose up -d ycp-auth-go
+curl -X POST http://localhost:13337/init_admin \
+  -d "app=MyApp" \
+  -d "password=YourSecurePassword"</code></pre>
+          <div class="callout">
+            <span class="callout-label">快速启动脚本</span>
+            <p>Windows 用户：运行 <code class="inline-code">start_server.bat</code></p>
+            <p>Linux/macOS 用户：运行 <code class="inline-code">./start_server.sh</code></p>
+          </div>
+
+          <h3>配置客户端</h3>
+          <p>修改混淆器源码中的授权服务器地址，指向你部署的服务器实例：</p>
+<pre class="code-block"><span class="lang-label">Java</span><code><span class="tok-c">// obfuscator/src/main/java/com/yumegod/obfuscator/YumeCloudProtection.java
+// 第 60 行</span>
+<span class="tok-k">public static</span> String authorizationURL = "http://你的服务器IP:13337/";</code></pre>
+          <p>重新构建混淆器以使配置生效：</p>
+<pre class="code-block"><span class="lang-label">Bash</span><code>cd obfuscator
+gradle shadowJar</code></pre>
+        </section>
+
+        <!-- ===== Section 2: 混淆注解参考 ===== -->
+        <section class="docs-section" id="annotations">
+          <h2>混淆注解参考</h2>
+          <p class="lead">YCPPlus 提供丰富的注解驱动的混淆保护技术。所有注解位于 com.yumegod.yumecloudprotection.annotations 包下。</p>
+
+          <div class="t docs-t">
+            <div class="c h"><span class="k">注解</span></div>
+            <div class="c h"><span class="k">描述</span></div>
+            <div class="c h"><span class="k">级别</span></div>
+
+            <div class="c mono">@StringObfuscate</div>
+            <div class="c">字符串常量加密存储</div>
+            <div class="c">基礎</div>
+
+            <div class="c mono">@NumberObfuscate</div>
+            <div class="c">数值计算表达式复杂化</div>
+            <div class="c">基礎</div>
+
+            <div class="c mono">@FlowObfuscate</div>
+            <div class="c">插入虚假分支和跳转</div>
+            <div class="c">基礎</div>
+
+            <div class="c mono">@CallEncryption</div>
+            <div class="c">方法调用关系加密</div>
+            <div class="c">基礎</div>
+
+            <div class="c mono">@InvokeDynamic</div>
+            <div class="c">invokedynamic 指令转换</div>
+            <div class="c">基礎</div>
+
+            <div class="c mono">@Rename</div>
+            <div class="c">类/方法/字段名随机化</div>
+            <div class="c">基礎</div>
+
+            <div class="c mono">@Native</div>
+            <div class="c">Java → C++ + VMProtect</div>
+            <div class="c level-adv">高级</div>
+
+            <div class="c mono">@VMProtectVirtualization</div>
+            <div class="c">代码虚拟机执行</div>
+            <div class="c level-adv">高级</div>
+
+            <div class="c mono">@VMProtectMutation</div>
+            <div class="c">代码变异</div>
+            <div class="c level-adv">高级</div>
+
+            <div class="c mono">@VMProtectUltra</div>
+            <div class="c">最高级别保护</div>
+            <div class="c level-adv">高级</div>
+
+            <div class="c mono">@DebuggerCheck</div>
+            <div class="c">运行时调试器检测</div>
+            <div class="c level-adv">高级</div>
+
+            <div class="c mono">@TamperPrevention</div>
+            <div class="c">代码完整性验证</div>
+            <div class="c level-adv">高级</div>
+          </div>
+
+          <p>组合使用基础与高级注解，可实现层层叠加的保护策略：</p>
+<pre class="code-block"><span class="lang-label">Java</span><code><span class="tok-a">@Native</span>
+<span class="tok-a">@VMProtectUltra</span>
+<span class="tok-k">public</span> String validateLicense(String key) {
+    <span class="tok-c">// 此方法将被转换为 C++ Native 代码
+    // 并应用最高级别虚拟化保护</span>
+    <span class="tok-k">return</span> checkKey(key);
+}</code></pre>
+        </section>
+
+        <!-- ===== Section 3: 授权服务器 API ===== -->
+        <section class="docs-section" id="authserver">
+          <h2>授权服务器 API</h2>
+          <p class="lead">自托管授权服务器提供完整的密钥管理 API，兼容原始 Admin Panel 协议。</p>
+
+          <div class="callout">
+            <span class="callout-label">性能基准</span>
+            <p>Go 版本：约 15,000 req/s（P95: 10ms）</p>
+            <p>Python 版本：约 500 req/s（P95: 200ms）</p>
+          </div>
+
+          <div class="t docs-t docs-t-api">
+            <div class="c h"><span class="k">端点</span></div>
+            <div class="c h"><span class="k">功能</span></div>
+            <div class="c h"><span class="k">参数</span></div>
+
+            <div class="c mono">POST /init_admin</div>
+            <div class="c">初始化管理员</div>
+            <div class="c mono">app, password</div>
+
+            <div class="c mono">POST /admin_login</div>
+            <div class="c">管理员登录</div>
+            <div class="c mono">app, password</div>
+
+            <div class="c mono">POST /admin</div>
+            <div class="c">管理命令</div>
+            <div class="c mono">app, password, command</div>
+
+            <div class="c mono">POST /login</div>
+            <div class="c">客户端授权验证</div>
+            <div class="c mono">app, key</div>
+          </div>
+
+          <h3>管理命令</h3>
+          <p>通过 <code class="inline-code">/admin</code> 端点传入 command 参数执行管理操作：</p>
+          <div class="cmd-list">
+            <div class="cmd-item">
+              <code class="cmd-pill">Key &lt;数量&gt; &lt;天数&gt;</code>
+              <span class="cmd-desc">生成密钥（1-50 个，1-9999 天）</span>
+            </div>
+            <div class="cmd-item">
+              <code class="cmd-pill">Ban &lt;密钥&gt;</code>
+              <span class="cmd-desc">封禁密钥</span>
+            </div>
+            <div class="cmd-item">
+              <code class="cmd-pill">Reset &lt;密钥&gt;</code>
+              <span class="cmd-desc">重置密钥</span>
+            </div>
+            <div class="cmd-item">
+              <code class="cmd-pill">LastLogin &lt;密钥&gt;</code>
+              <span class="cmd-desc">查询上次登录时间</span>
+            </div>
+          </div>
+
+          <p>生成 10 个 30 天有效期的密钥，并封禁指定密钥：</p>
+<pre class="code-block"><span class="lang-label">Bash</span><code>curl -X POST http://localhost:13337/admin \
+  -d "app=MyApp" \
+  -d "password=YourPassword" \
+  -d "command=Key 10 30"
+
+curl -X POST http://localhost:13337/admin \
+  -d "app=MyApp" \
+  -d "password=YourPassword" \
+  -d "command=Ban ABCD-1234-EFGH-5678"</code></pre>
+        </section>
+
+        <!-- ===== Section 4: 部署指南 ===== -->
+        <section class="docs-section" id="deployment">
+          <h2>部署指南</h2>
+          <p class="lead">YCPPlus 授权服务器支持多种部署方式，推荐使用 Docker 进行生产环境部署。</p>
+
+          <h3>Docker 部署</h3>
+          <p>构建镜像并以守护态启动 Go 与 Python 实例：</p>
+<pre class="code-block"><span class="lang-label">Bash</span><code>docker-compose build
+docker-compose up -d ycp-auth-go
+docker-compose up -d ycp-auth-python
+docker-compose logs -f ycp-auth-go</code></pre>
+
+          <h3>手动部署</h3>
+          <p>Python 版本依赖 Flask，直接运行入口脚本：</p>
+<pre class="code-block"><span class="lang-label">Bash</span><code>cd server_python
+pip install -r requirements.txt
+python app.py</code></pre>
+          <p>Go 版本编译为单一二进制后运行：</p>
+<pre class="code-block"><span class="lang-label">Bash</span><code>cd server_go
+go build -o auth-server main.go
+./auth-server</code></pre>
+
+          <h3>Nginx 反向代理</h3>
+          <p>通过 Nginx 提供 HTTPS 终止与域名转发：</p>
+<pre class="code-block"><span class="lang-label">Nginx</span><code>server {
+    listen 443 ssl;
+    server_name auth.yourdomain.com;
+
+    ssl_certificate     /path/to/cert.pem;
+    ssl_certificate_key /path/to/key.pem;
+
+    location / {
+        proxy_pass http://127.0.0.1:13337;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}</code></pre>
+
+          <h3>测试</h3>
+          <p>运行 API 功能测试与 Locust 性能压测：</p>
+<pre class="code-block"><span class="lang-label">Bash</span><code>cd tests
+chmod +x test_api.sh
+./test_api.sh
+
+pip install locust
+locust -f tests/test_performance.py \
+  --host=http://localhost:13337</code></pre>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ SHARED FOOTER (paths fixed for pages/) ============ -->
+  <footer class="site-footer" id="site-footer">
+    <div class="footer-inner">
+      <div class="footer-col footer-brand-col">
+        <div class="footer-brand">YCPPlus</div>
+        <p class="footer-desc">企业级 Java 代码混淆保护工具与自托管授权服务器。从字节码加密到 Native 转换，注解驱动的全链路代码安全方案。</p>
+      </div>
+      <div class="footer-col">
+        <div class="footer-label">资源</div>
+        <a href="docs.html" class="footer-link">文档</a>
+        <a href="https://github.com/NovolineGast/YCPPlus" target="_blank" rel="noopener" class="footer-link">GitHub 仓库</a>
+        <a href="docs.html#quickstart" class="footer-link">快速开始</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-label">技术栈</div>
+        <span class="footer-tech">Java · Gradle</span>
+        <span class="footer-tech">Python · Flask</span>
+        <span class="footer-tech">Go · Gin</span>
+        <span class="footer-tech">Docker · Nginx</span>
+      </div>
+      <div class="footer-col">
+        <div class="footer-label">许可证</div>
+        <span class="footer-tech">MIT License</span>
+        <span class="footer-tech">NovolineGast</span>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 YCPPlus. MIT 开源协议。</span>
+    </div>
+  </footer>
+
+  <script>lucide.createIcons();</script>
+  <script>
+    // Smooth scroll for sidebar links
+    document.querySelectorAll('.docs-nav a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // Scrollspy + breadcrumb sync
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.docs-nav a');
+    const breadcrumbCurrent = document.getElementById('breadcrumb-current');
+    const sectionTitles = {
+      quickstart: '快速开始',
+      annotations: '混淆注解参考',
+      authserver: '授权服务器 API',
+      deployment: '部署指南'
+    };
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - 100;
+        if (window.scrollY >= sectionTop) {
+          current = section.getAttribute('id');
+        }
+      });
+      navLinks.forEach(link => {
+        link.classList.remove('nav-active');
+        if (link.getAttribute('href') === '#' + current) {
+          link.classList.add('nav-active');
+        }
+      });
+      if (current && breadcrumbCurrent && sectionTitles[current]) {
+        breadcrumbCurrent.textContent = sectionTitles[current];
+      }
+    });
+  </script>
+
+    <style id="critical-layout">
+      /* Reset component-CSS body padding overrides */
+      body { margin: 0; padding: 0; background: var(--background); color: var(--foreground); font-family: var(--font-sans); font-size: 15px; line-height: 1.55; letter-spacing: var(--tracking-normal); }
+
+      /* ===== HEADER (dark top bar) ===== */
+      .site-header { position: fixed; top: 0; left: 0; right: 0; z-index: 50; }
+      .site-header .webbar {
+        background: var(--background-800);
+        color: var(--text-50);
+        height: 44px;
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0 22px;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+      }
+      .site-header .brand { color: var(--text-50); font-size: 14px; font-weight: 700; letter-spacing: 0.01em; text-transform: none; white-space: nowrap; text-decoration: none; }
+      .site-header .rail { margin-left: auto; display: flex; gap: 6px; }
+      .site-header .link {
+        color: var(--text-50);
+        height: 32px;
+        padding: 0 14px;
+        font-size: 13px;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        text-decoration: none;
+        transition: background-color .18s ease, color .18s ease;
+      }
+      .site-header .link:hover { background: var(--background-700); color: var(--text-50); }
+      .site-header .link:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+      .site-header .link.active { background: var(--primary); color: var(--primary-foreground); font-weight: 600; }
+
+      /* ===== MAIN ===== */
+      main { padding-top: 44px; display: block; }
+
+      /* ===== BREADCRUMB ===== */
+      .docs-breadcrumb {
+        border-bottom: 1px solid var(--border);
+        background: var(--background);
+        padding: 10px 22px;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--muted-foreground);
+      }
+      .docs-breadcrumb .sep { margin: 0 8px; color: var(--background-400); }
+      .docs-breadcrumb .current { color: var(--foreground); }
+
+      /* ===== DOCS LAYOUT ===== */
+      .docs-layout { display: flex; gap: 48px; max-width: 1040px; margin: 0 auto; padding: 32px 22px; }
+      .docs-sidebar { width: 220px; flex: 0 0 220px; position: sticky; top: 76px; align-self: flex-start; }
+      .docs-nav { display: flex; flex-direction: column; gap: 4px; }
+      .docs-nav a {
+        display: flex; align-items: center; gap: 10px;
+        height: 36px; padding: 0 12px;
+        border-radius: 999px;
+        font-size: 13px; color: var(--muted-foreground);
+        text-decoration: none;
+        transition: background-color .18s ease, color .18s ease;
+      }
+      .docs-nav a:hover { background: var(--background-100); color: var(--foreground); }
+      .docs-nav a:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+      .docs-nav a.nav-active { background: var(--background-200); color: var(--foreground); font-weight: 600; }
+      .docs-nav .num { font-family: var(--font-mono); font-size: 11px; color: var(--muted-foreground); min-width: 18px; }
+      .docs-nav a.nav-active .num { color: var(--foreground); }
+
+      .docs-content { flex: 1; min-width: 0; max-width: 760px; }
+      .docs-section { margin-bottom: 64px; scroll-margin-top: 88px; }
+      .docs-section h2 { font-size: 32px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; margin: 0 0 14px; color: var(--foreground); }
+      .docs-section h3 { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.25; margin: 36px 0 12px; color: var(--foreground); }
+      .docs-section p { font-size: 15px; line-height: 1.55; color: var(--foreground); margin: 0 0 16px; }
+      .docs-section .lead { font-size: 16px; color: var(--muted-foreground); }
+
+      /* ===== CODE BLOCKS ===== */
+      .code-block {
+        --code-bg: var(--background-100);
+        --code-fg: var(--foreground);
+        --code-comment: var(--muted-foreground);
+        --code-annotation: var(--primary);
+        --code-keyword: var(--brand-600);
+        background: var(--code-bg);
+        color: var(--code-fg);
+        border-radius: var(--radius);
+        padding: 20px 24px;
+        font-family: var(--font-mono);
+        font-size: 13px;
+        line-height: 1.6;
+        overflow-x: auto;
+        margin: 16px 0;
+        position: relative;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-xs);
+      }
+      .code-block code { font-family: inherit; color: inherit; background: transparent; padding: 0; white-space: pre; }
+      .code-block .lang-label {
+        position: absolute; top: 12px; right: 16px;
+        font-size: 10px; text-transform: uppercase;
+        letter-spacing: 0.08em; color: var(--code-comment);
+        font-family: var(--font-mono);
+      }
+      .code-block .tok-c { color: var(--code-comment); }
+      .code-block .tok-a { color: var(--code-annotation); }
+      .code-block .tok-k { color: var(--code-keyword); }
+
+      .inline-code {
+        font-family: var(--font-mono); font-size: 0.92em;
+        background: var(--background-100); padding: 2px 6px;
+        border-radius: var(--apple-radius-sm); border: 1px solid var(--border);
+        color: var(--foreground);
+      }
+
+      /* ===== CALLOUT ===== */
+      .callout {
+        background: var(--background-100);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 20px;
+        margin: 16px 0;
+      }
+      .callout .callout-label {
+        font-family: var(--font-mono); font-size: 11px;
+        text-transform: uppercase; letter-spacing: 0.08em;
+        color: var(--muted-foreground); display: block; margin-bottom: 8px;
+      }
+      .callout p { margin: 4px 0; color: var(--foreground); font-size: 14px; line-height: 1.5; }
+
+      /* ===== COMMAND PILLS ===== */
+      .cmd-list { display: flex; flex-direction: column; gap: 12px; margin: 16px 0; }
+      .cmd-item { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+      .cmd-pill {
+        font-family: var(--font-mono); font-size: 13px;
+        background: var(--background-100); color: var(--foreground);
+        border: 1px solid var(--border); border-radius: 999px;
+        padding: 4px 12px; white-space: nowrap;
+      }
+      .cmd-desc { color: var(--foreground); font-size: 14px; line-height: 1.5; }
+
+      /* ===== DOCS TABLES (.t modifiers) ===== */
+      .t.docs-t { grid-template-columns: 1.3fr 2fr 0.9fr; box-shadow: var(--shadow-xs); }
+      .t.docs-t-api { grid-template-columns: 1.4fr 1.4fr 1.2fr; box-shadow: var(--shadow-xs); }
+      .t.docs-t > .c, .t.docs-t-api > .c { border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); font-size: 13px; }
+      .t.docs-t > .c:nth-child(3n), .t.docs-t-api > .c:nth-child(3n) { border-right: 0; }
+      .t.docs-t > .c:nth-last-child(-n+3), .t.docs-t-api > .c:nth-last-child(-n+3) { border-bottom: 0; }
+      .t.docs-t > .c.h, .t.docs-t-api > .c.h { background: var(--background-100); }
+      .t.docs-t > .c.mono, .t.docs-t-api > .c.mono { font-family: var(--font-mono); font-size: 12px; color: var(--foreground); }
+      .t.docs-t > .c.level-adv { color: var(--primary); font-weight: 600; }
+      .t.docs-t > .c .k, .t.docs-t-api > .c .k { font-size: 13px; }
+
+      /* ===== FOOTER ===== */
+      .site-footer { background: var(--background-100); border-top: 1px solid var(--border); padding: 48px 22px 24px; margin-top: 64px; }
+      .footer-inner { max-width: 1040px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; }
+      .footer-brand-col { max-width: 340px; }
+      .footer-brand { font-size: 18px; font-weight: 700; color: var(--foreground); margin-bottom: 8px; }
+      .footer-desc { color: var(--muted-foreground); font-size: 13px; line-height: 1.5; margin: 0; }
+      .footer-label { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted-foreground); margin-bottom: 12px; }
+      .footer-link, .footer-tech { display: block; font-size: 13px; margin-bottom: 8px; text-decoration: none; }
+      .footer-link { color: var(--foreground); }
+      .footer-link:hover { color: var(--primary); }
+      .footer-tech { color: var(--muted-foreground); }
+      .footer-bottom { max-width: 1040px; margin: 32px auto 0; padding-top: 20px; border-top: 1px solid var(--border); color: var(--muted-foreground); font-size: 12px; }
+
+      /* ===== RESPONSIVE ===== */
+      @media (max-width: 900px) {
+        .docs-layout { gap: 28px; }
+        .docs-sidebar { width: 180px; flex-basis: 180px; }
+      }
+      @media (max-width: 768px) {
+        .docs-layout { flex-direction: column; gap: 24px; padding: 24px 16px; }
+        .docs-sidebar { width: 100%; flex-basis: auto; position: static; }
+        .docs-nav { flex-direction: row; overflow-x: auto; gap: 8px; padding-bottom: 4px; }
+        .docs-nav a { white-space: nowrap; }
+        .docs-content { max-width: 100%; }
+        .docs-section h2 { font-size: 26px; }
+        .docs-section h3 { font-size: 19px; }
+        .footer-inner { grid-template-columns: 1fr 1fr; gap: 24px; }
+        .footer-brand-col { grid-column: 1 / -1; max-width: none; }
+      }
+      @media (max-width: 480px) {
+        .site-header .webbar { padding: 0 14px; gap: 8px; }
+        .site-header .brand { font-size: 13px; }
+        .site-header .link { padding: 0 10px; font-size: 12px; }
+        .docs-breadcrumb { padding: 8px 14px; }
+        .code-block { padding: 16px; font-size: 12px; }
+        .footer-inner { grid-template-columns: 1fr; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+      }
+    </style>
+</body>
+</html>
